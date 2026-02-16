@@ -1,0 +1,178 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  SCHEMA_VERSION: "1.5.0"
+  SCHEMA_URL: "https://adaptivecards.io/schemas/{{.SCHEMA_VERSION}}/adaptive-card.json"
+  SCHEMA_PATH: "internal/schema/adaptive-card.json"
+
+  GO_LIST_TEST_FILTER: "{{`{{if or .TestGoFiles .XTestGoFiles}}{{.ImportPath}}{{end}}`}}"
+  GO_TEST_PKGS: "./..."
+
+  COVERAGE_DIR: coverage
+  COVERAGE_FILE: "{{.COVERAGE_DIR}}/coverage.out"
+  COVERAGE_HTML: "{{.COVERAGE_DIR}}/coverage.html"
+
+  # BG_COVERAGE_OUT: "bg_image_coverage.out"
+  # BG_COVERAGE_HTML: "bg_image_coverage.html"
+  # BG_TEST_REGEX: "TestNewBackgroundImage|TestMustNewBackgroundImage|TestBackgroundImage"
+
+tasks:
+  update:schema:
+    desc: Download Adaptive Cards schema version {{.SCHEMA_VERSION}}
+    cmds:
+      - mkdir -p internal/schema
+      - curl -fsSL {{.SCHEMA_URL}} -o {{.SCHEMA_PATH}}
+    generates:
+      - "{{.SCHEMA_PATH}}"
+
+  check:
+    desc: Run fmt, vet, lint, and tests
+    deps: [fmt, vet, lint, test]
+
+  clean:
+    desc: Remove generated artifacts and Go caches
+    cmds:
+      - task clean:caches
+      - task clean:coverage
+
+  clean:caches:
+    desc: Remove Go build and test caches
+    cmds:
+      - go clean -cache
+      - go clean -testcache
+
+  clean:coverage:
+    desc: Remove generated coverage artifacts
+    cmds:
+      - rm -rf {{.COVERAGE_DIR}}
+
+  default:
+    desc: "Default task"
+    cmds:
+      - task --list-all
+
+  deps:
+    desc: Download and verify dependencies
+    cmds:
+      - go mod download
+      - go mod verify
+
+  deps:tidy:
+    desc: Tidy dependencies (go.mod/go.sum)
+    cmds:
+      - go mod tidy
+
+  deps:update:
+    desc: Update dependencies
+    cmds:
+      - go get -u ./...
+      - task: deps:tidy
+
+  fmt:
+    desc: Format Go code
+    cmds:
+      - go fmt ./...
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run ./...
+
+  lint:verbose:
+    desc: Run golangci-lint with verbose output
+    cmds:
+      - golangci-lint run -v ./...
+
+  test:
+    desc: Run Go tests
+    cmds:
+      - go test {{.GO_TEST_PKGS}}
+  sources:
+    - "**/*.go"
+    - go.mod
+    - go.sum
+
+  test:fresh:
+    desc: "Run Go tests with fresh cache"
+    cmds:
+      - go test -count=1 {{.GO_TEST_PKGS}}
+
+  test:verbose:
+    desc: Run all tests with verbose output and race detector
+    cmds:
+      - go test -v -race {{.GO_TEST_PKGS}}
+
+  test:existing:
+    desc: Run tests in packages containing test files only
+    summary: |
+      This task lists all packages that contain test files and runs tests only in those packages.
+      This helps to avoid cluttering the output with "[no test files]" messages from packages without tests.
+
+      It also considers both test files in the same package and external test files (XTestGoFiles).
+      e.g. a package with `package foo` and `foo_test.go` with `package foo_test`.
+    cmds:
+      - go list -f '{{.GO_LIST_TEST_FILTER}}' {{.GO_TEST_PKGS}} | xargs -r go test
+
+  test:existing:verbose:
+    desc: Run tests in packages containing test files only with verbose output and race detector
+    summary: |
+      This task lists all packages that contain test files and runs tests only in those packages.
+      This helps to avoid cluttering the output with "[no test files]" messages from packages without tests.
+
+      It also considers both test files in the same package and external test files (XTestGoFiles).
+      e.g. a package with `package foo` and `foo_test.go` with `package foo_test`.
+    cmds:
+      - go list -f '{{.GO_LIST_TEST_FILTER}}' {{.GO_TEST_PKGS}} | xargs -r go test -v -race
+
+  test:coverage:
+    desc: Run all tests with coverage summary
+    cmds:
+      - mkdir -p {{.COVERAGE_DIR}}
+      - go test -coverprofile={{.COVERAGE_FILE}} -covermode=atomic {{.GO_TEST_PKGS}}
+      - go tool cover -html={{.COVERAGE_FILE}} -o {{.COVERAGE_HTML}}
+      - echo "Coverage report generated at {{.COVERAGE_HTML}}"
+    sources:
+      - "**/*.go"
+      - go.mod
+      - go.sum
+    generates:
+      - "{{.COVERAGE_FILE}}"
+      - "{{.COVERAGE_HTML}}"
+
+  test:coverage:show:
+    desc: Show test coverage in browser
+    deps: [test:coverage]
+    cmds:
+      - cmd: open {{.COVERAGE_HTML}}
+        platforms: [darwin]
+      - cmd: xdg-open {{.COVERAGE_HTML}}
+        platforms: [linux]
+      - cmd: start {{.COVERAGE_HTML}}
+        platforms: [windows]
+
+  test:watch:
+    desc: Watch for changes and run all tests
+    watch: true
+    sources:
+      - "**/*.go"
+    cmds:
+      - task test
+
+  # test:background-image:
+  #   desc: Run background-image related tests across all packages
+  #   cmds:
+  #     - go test -v {{.GO_TEST_PKGS}} -run "{{.BG_TEST_REGEX}}"
+
+  # test:background-image:coverage:
+  #   desc: Run background-image related tests with coverage summary
+  #   cmds:
+  #     - go test -coverprofile={{.BG_COVERAGE_OUT}} {{.GO_TEST_PKGS}} -run "{{.BG_TEST_REGEX}}"
+  #     - go tool cover -func={{.BG_COVERAGE_OUT}}
+
+  # test:background-image:coverage:html:
+  #   desc: Generate HTML coverage report for background-image tests
+  #   cmds:
+  #     - task test:background-image:coverage
+  #     - go tool cover -html={{.BG_COVERAGE_OUT}} -o {{.BG_COVERAGE_HTML}}
+  #     - echo "Background image coverage report generated at {{.BG_COVERAGE_HTML}}"
