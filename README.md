@@ -1,6 +1,6 @@
 # go-adaptivecards
 
-Experimental Go library for building and validating Microsoft Adaptive Cards.
+Experimental Go library for building and validating Microsoft [Adaptive Cards](https://adaptivecards.io/).
 
 ## Important Status
 
@@ -17,7 +17,7 @@ This repository provides:
 
 - Strongly typed Go models for selected Adaptive Card features
 - Builder-style APIs for composing cards
-- Logical validation and JSON Schema validation support
+- Logical validation and JSON Schema validation support against [schema versions 1.5.0](https://adaptivecards.io/schemas/1.5.0/adaptive-card.json)
 - JSON factory-based decoding for interface fields (`Element`, `Action`)
 - Optional webhook posting helper for Teams/workflow endpoints
 
@@ -29,7 +29,7 @@ go get github.com/untcha/go-adaptivecards
 
 ## Quick Example
 
-Only example shown here (from `examples/simple/main.go`):
+Quick "Hello, World!" example (from `examples/simple/main.go`):
 
 ```go
 package main
