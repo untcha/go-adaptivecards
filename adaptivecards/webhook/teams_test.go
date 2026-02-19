@@ -35,7 +35,8 @@ func TestPostToWorkflowRawSuccess(t *testing.T) {
 	defer srv.Close()
 
 	card := c.NewCard().AddTextBlock(els.NewTextBlock("hello"))
-	if err := PostToWorkflowRaw(context.Background(), srv.URL, card); err != nil {
+	policy := URLPolicy{AllowHTTP: true, AllowPrivateNetworks: true}
+	if err := PostToWorkflowRawWithClientAndPolicy(context.Background(), srv.Client(), srv.URL, card, policy); err != nil {
 		t.Fatalf("unexpected post error: %v", err)
 	}
 }
@@ -48,7 +49,8 @@ func TestPostToWorkflowRawStatusError(t *testing.T) {
 	defer srv.Close()
 
 	card := c.NewCard().AddTextBlock(els.NewTextBlock("hello"))
-	err := PostToWorkflowRaw(context.Background(), srv.URL, card)
+	policy := URLPolicy{AllowHTTP: true, AllowPrivateNetworks: true}
+	err := PostToWorkflowRawWithClientAndPolicy(context.Background(), srv.Client(), srv.URL, card, policy)
 	if err == nil {
 		t.Fatalf("expected non-2xx error")
 	}
@@ -72,8 +74,8 @@ func TestPostToWorkflowRawWithCanceledContext(t *testing.T) {
 	if err == nil {
 		t.Fatalf("expected canceled context error")
 	}
-	if !strings.Contains(err.Error(), "context canceled") {
-		t.Fatalf("expected context canceled error, got %v", err)
+	if !strings.Contains(err.Error(), "canceled") {
+		t.Fatalf("expected canceled error, got %v", err)
 	}
 }
 
@@ -84,7 +86,8 @@ func TestPostToWorkflowRawWithClientSuccess(t *testing.T) {
 	defer srv.Close()
 
 	card := c.NewCard().AddTextBlock(els.NewTextBlock("hello"))
-	if err := PostToWorkflowRawWithClient(context.Background(), srv.Client(), srv.URL, card); err != nil {
+	policy := URLPolicy{AllowHTTP: true, AllowPrivateNetworks: true}
+	if err := PostToWorkflowRawWithClientAndPolicy(context.Background(), srv.Client(), srv.URL, card, policy); err != nil {
 		t.Fatalf("unexpected post error: %v", err)
 	}
 }
@@ -110,7 +113,8 @@ func TestPostToWorkflowRawInvalidCard(t *testing.T) {
 	defer srv.Close()
 
 	invalid := c.NewCard().AddTextBlock(els.NewTextBlock(""))
-	err := PostToWorkflowRaw(context.Background(), srv.URL, invalid)
+	policy := URLPolicy{AllowHTTP: true, AllowPrivateNetworks: true}
+	err := PostToWorkflowRawWithClientAndPolicy(context.Background(), srv.Client(), srv.URL, invalid, policy)
 	if err == nil {
 		t.Fatalf("expected validation error for invalid card")
 	}
@@ -128,7 +132,8 @@ func TestPostToWorkflowRawStatusErrorBodyIsLimited(t *testing.T) {
 	defer srv.Close()
 
 	card := c.NewCard().AddTextBlock(els.NewTextBlock("hello"))
-	err := PostToWorkflowRaw(context.Background(), srv.URL, card)
+	policy := URLPolicy{AllowHTTP: true, AllowPrivateNetworks: true}
+	err := PostToWorkflowRawWithClientAndPolicy(context.Background(), srv.Client(), srv.URL, card, policy)
 	if err == nil {
 		t.Fatalf("expected non-2xx error")
 	}
@@ -151,6 +156,20 @@ func TestPostToWorkflowRawWithClientTransportError(t *testing.T) {
 	err := PostToWorkflowRawWithClient(context.Background(), badClient, "https://example.com", card)
 	if err == nil || !strings.Contains(err.Error(), "post workflow") {
 		t.Fatalf("expected wrapped transport error, got %v", err)
+	}
+}
+
+func TestPostToWorkflowRawRejectsInsecureOrLocalURLByDefault(t *testing.T) {
+	card := c.NewCard().AddTextBlock(els.NewTextBlock("hello"))
+
+	err := PostToWorkflowRaw(context.Background(), "http://example.com/webhook", card)
+	if err == nil || !strings.Contains(err.Error(), "must be https") {
+		t.Fatalf("expected https enforcement error, got %v", err)
+	}
+
+	err = PostToWorkflowRaw(context.Background(), "https://127.0.0.1/webhook", card)
+	if err == nil || !strings.Contains(err.Error(), "private or local") {
+		t.Fatalf("expected local address rejection, got %v", err)
 	}
 }
 
