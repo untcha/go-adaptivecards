@@ -25,6 +25,7 @@ linters:
     - gosec
     - govet # default
     - ineffassign # default
+    - modernize
     - revive
     - staticcheck # default
     - unused # default

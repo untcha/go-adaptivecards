@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 )
 
@@ -65,15 +66,7 @@ func validateURLWithOptions(u string, baseErr error, opts URLValidationOptions) 
 	}
 
 	// Validate scheme
-	schemeAllowed := false
-	for _, scheme := range allowedSchemes {
-		if parsed.Scheme == scheme {
-			schemeAllowed = true
-			break
-		}
-	}
-
-	if !schemeAllowed {
+	if !slices.Contains(allowedSchemes, parsed.Scheme) {
 		if len(allowedSchemes) == 1 {
 			return "", fmt.Errorf("%w: unsupported scheme %q (want %s)", baseErr, parsed.Scheme, allowedSchemes[0])
 		}
