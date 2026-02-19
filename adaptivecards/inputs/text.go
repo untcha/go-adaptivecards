@@ -25,8 +25,6 @@ type InputText struct {
 	Value        string           `json:"value,omitempty"`        // Version 1.0
 }
 
-func (i InputText) GetType() m.TypeString { return m.TypeInputText }
-
 // NewInputText creates an Input.Text with the specified id.
 func NewInputText(id string) InputText {
 	return InputText{
@@ -36,6 +34,8 @@ func NewInputText(id string) InputText {
 		Type: m.TypeInputText,
 	}
 }
+
+func (i InputText) GetType() m.TypeString { return m.TypeInputText }
 
 // Validate checks that the InputText has valid fields.
 func (i InputText) Validate() error {

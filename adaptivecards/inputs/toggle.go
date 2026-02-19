@@ -22,8 +22,6 @@ type InputToggle struct {
 	Wrap     bool         `json:"wrap,omitempty"`     // Version 1.2
 }
 
-func (i InputToggle) GetType() m.TypeString { return m.TypeInputToggle }
-
 func NewInputToggle(id, title string) InputToggle {
 	return InputToggle{
 		InputBase: InputBase{ElementBase: e.ElementBase{ID: id}},
@@ -33,6 +31,8 @@ func NewInputToggle(id, title string) InputToggle {
 		ValueOn:   "true",
 	}
 }
+
+func (i InputToggle) GetType() m.TypeString { return m.TypeInputToggle }
 
 func (i InputToggle) Validate() error {
 	if err := i.validateInputBase("input.toggle"); err != nil {

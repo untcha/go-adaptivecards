@@ -24,14 +24,14 @@ type ColumnSet struct {
 	HorizontalAlignment m.HorizontalAlignment `json:"horizontalAlignment,omitempty"` // Version 1.0
 }
 
-func (c ColumnSet) GetType() m.TypeString { return m.TypeColumnSet }
-
 func NewColumnSet(columns ...Column) ColumnSet {
 	return ColumnSet{
 		Type:    m.TypeColumnSet,
 		Columns: columns,
 	}
 }
+
+func (c ColumnSet) GetType() m.TypeString { return m.TypeColumnSet }
 
 func (c ColumnSet) Validate() error {
 	if err := c.validateElementBase(); err != nil {
@@ -62,29 +62,6 @@ func (c ColumnSet) Validate() error {
 			"columnSet.minHeight must be in format \"<number>px\" (got %q)",
 			c.MinHeight,
 		)
-	}
-	return nil
-}
-
-func (c ColumnSet) validateElementBase() error {
-	if c.Height != "" && !c.Height.IsValid() {
-		return m.NewEnumError(
-			"ColumnSet.height",
-			string(c.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if c.Spacing != "" && !c.Spacing.IsValid() {
-		return m.NewEnumError("ColumnSet.spacing", string(c.Spacing), m.AllowedSpacingStrings())
-	}
-	if c.ID != "" {
-		id := strings.TrimSpace(c.ID)
-		if id == "" {
-			return fmt.Errorf("columnSet.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("columnSet.id cannot contain newlines or tabs")
-		}
 	}
 	return nil
 }
@@ -137,6 +114,29 @@ func (c *ColumnSet) UnmarshalJSON(b []byte) error {
 	}
 
 	*c = ColumnSet(base)
+	return nil
+}
+
+func (c ColumnSet) validateElementBase() error {
+	if c.Height != "" && !c.Height.IsValid() {
+		return m.NewEnumError(
+			"ColumnSet.height",
+			string(c.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+	if c.Spacing != "" && !c.Spacing.IsValid() {
+		return m.NewEnumError("ColumnSet.spacing", string(c.Spacing), m.AllowedSpacingStrings())
+	}
+	if c.ID != "" {
+		id := strings.TrimSpace(c.ID)
+		if id == "" {
+			return fmt.Errorf("columnSet.id cannot be empty or whitespace-only")
+		}
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("columnSet.id cannot contain newlines or tabs")
+		}
+	}
 	return nil
 }
 

@@ -24,8 +24,6 @@ type TableCell struct {
 	Rtl                      *bool                      `json:"rtl,omitempty"`                      // Version 1.5
 }
 
-func (tc TableCell) GetType() m.TypeString { return m.TypeTableCell }
-
 // NewTableCell creates a new TableCell with the specified items.
 func NewTableCell(items ...e.Element) TableCell {
 	return TableCell{
@@ -41,6 +39,8 @@ func NewTableCellEmpty() TableCell {
 		Items: make([]e.Element, 0),
 	}
 }
+
+func (tc TableCell) GetType() m.TypeString { return m.TypeTableCell }
 
 // Builder methods for TableCell.
 

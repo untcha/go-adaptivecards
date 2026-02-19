@@ -20,14 +20,14 @@ type InputNumber struct {
 	Value       *float64     `json:"value,omitempty"`       // Version 1.0
 }
 
-func (i InputNumber) GetType() m.TypeString { return m.TypeInputNumber }
-
 func NewInputNumber(id string) InputNumber {
 	return InputNumber{
 		InputBase: InputBase{ElementBase: e.ElementBase{ID: id}},
 		Type:      m.TypeInputNumber,
 	}
 }
+
+func (i InputNumber) GetType() m.TypeString { return m.TypeInputNumber }
 
 func (i InputNumber) Validate() error {
 	if err := i.validateInputBase("input.number"); err != nil {

@@ -24,8 +24,6 @@ type Table struct {
 	VerticalCellContentAlignment   m.VerticalAlignment     `json:"verticalCellContentAlignment,omitempty"`   // Version 1.5
 }
 
-func (t Table) GetType() m.TypeString { return m.TypeTable }
-
 // NewTable creates a new empty Table
 func NewTable() Table {
 	firstRowAsHeader := true // Default value per spec
@@ -55,6 +53,8 @@ func NewTableWithColumnsAndRows(columns []TableColumnDefinition, rows []TableRow
 		GridStyle:        m.ContainerStyleDefault,
 	}
 }
+
+func (t Table) GetType() m.TypeString { return m.TypeTable }
 
 // Builder methods for Table structure
 
@@ -256,37 +256,6 @@ func (t Table) Validate() error {
 	return nil
 }
 
-// validateElementBase validates the inherited e.ElementBase fields
-func (t Table) validateElementBase() error {
-	// Validate Height field
-	if t.Height != "" && !t.Height.IsValid() {
-		return m.NewEnumError(
-			"Table.height",
-			string(t.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-
-	// Validate m.Spacing enum
-	if t.Spacing != "" && !t.Spacing.IsValid() {
-		return m.NewEnumError("Table.spacing", string(t.Spacing), m.AllowedSpacingStrings())
-	}
-
-	// Validate ID field (basic sanity checks)
-	if t.ID != "" {
-		id := strings.TrimSpace(t.ID)
-		if id == "" {
-			return fmt.Errorf("table.id cannot be empty or whitespace-only")
-		}
-		// ID should not contain certain characters that could cause issues
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("table.id cannot contain newlines or tabs")
-		}
-	}
-
-	return nil
-}
-
 // Custom JSON marshalling to ensure Type is always set and defaults are applied
 func (t Table) MarshalJSON() ([]byte, error) {
 	tt := t
@@ -367,6 +336,37 @@ func (t *Table) UnmarshalJSON(b []byte) error {
 	}
 
 	*t = Table(tmp)
+	return nil
+}
+
+// validateElementBase validates the inherited e.ElementBase fields
+func (t Table) validateElementBase() error {
+	// Validate Height field
+	if t.Height != "" && !t.Height.IsValid() {
+		return m.NewEnumError(
+			"Table.height",
+			string(t.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+
+	// Validate m.Spacing enum
+	if t.Spacing != "" && !t.Spacing.IsValid() {
+		return m.NewEnumError("Table.spacing", string(t.Spacing), m.AllowedSpacingStrings())
+	}
+
+	// Validate ID field (basic sanity checks)
+	if t.ID != "" {
+		id := strings.TrimSpace(t.ID)
+		if id == "" {
+			return fmt.Errorf("table.id cannot be empty or whitespace-only")
+		}
+		// ID should not contain certain characters that could cause issues
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("table.id cannot contain newlines or tabs")
+		}
+	}
+
 	return nil
 }
 

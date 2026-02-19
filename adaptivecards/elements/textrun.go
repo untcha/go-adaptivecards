@@ -28,14 +28,14 @@ type TextRun struct {
 	Weight        m.FontWeight `json:"weight,omitempty"`        // Version 1.2
 }
 
-func (r TextRun) GetType() m.TypeString { return m.TypeTextRun }
-
 func NewTextRun(text string) TextRun {
 	return TextRun{
 		Type: m.TypeTextRun,
 		Text: text,
 	}
 }
+
+func (r TextRun) GetType() m.TypeString { return m.TypeTextRun }
 
 func (r TextRun) Validate() error {
 	if r.Text == "" {

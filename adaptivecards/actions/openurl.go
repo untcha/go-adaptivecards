@@ -19,8 +19,6 @@ type ActionOpenURL struct {
 	URL  m.URI        `json:"url"`  // Version 1.0
 }
 
-func (a ActionOpenURL) GetType() m.TypeString { return m.TypeActionOpenURL }
-
 // NewActionOpenURL constructs an Action.OpenUrl with a validated absolute http/https URL.
 func NewActionOpenURL(title, u string) (ActionOpenURL, error) {
 	validURL, err := m.ValidateActionURL(u, ErrInvalidActionOpenURLURL)
@@ -36,6 +34,8 @@ func NewActionOpenURL(title, u string) (ActionOpenURL, error) {
 		URL:  m.URI(validURL),
 	}, nil
 }
+
+func (a ActionOpenURL) GetType() m.TypeString { return m.TypeActionOpenURL }
 
 func (a ActionOpenURL) WithTitle(title string) ActionOpenURL { a.Title = title; return a }
 

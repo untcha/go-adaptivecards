@@ -20,14 +20,14 @@ type InputDate struct {
 	Value       string       `json:"value,omitempty"`       // Version 1.0
 }
 
-func (i InputDate) GetType() m.TypeString { return m.TypeInputDate }
-
 func NewInputDate(id string) InputDate {
 	return InputDate{
 		InputBase: InputBase{ElementBase: e.ElementBase{ID: id}},
 		Type:      m.TypeInputDate,
 	}
 }
+
+func (i InputDate) GetType() m.TypeString { return m.TypeInputDate }
 
 func (i InputDate) Validate() error {
 	if err := i.validateInputBase("input.date"); err != nil {

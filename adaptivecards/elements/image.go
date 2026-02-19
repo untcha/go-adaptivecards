@@ -27,8 +27,6 @@ type Image struct {
 	Width               string                `json:"width,omitempty"`               // Version 1.1
 }
 
-func (i Image) GetType() m.TypeString { return m.TypeImage }
-
 // NewImageEmpty creates an Image with no URL set.
 func NewImageEmpty() Image {
 	return Image{
@@ -45,6 +43,8 @@ func NewImage(u string) Image {
 		URL:         m.URI(u),
 	}
 }
+
+func (i Image) GetType() m.TypeString { return m.TypeImage }
 
 // Fluent setters return a copy of Image with the specified field set.
 
@@ -213,27 +213,6 @@ func (i Image) Validate() error {
 	return nil
 }
 
-func (i Image) validateElementBase() error {
-	// Validate spacing enum.
-	if i.Spacing != "" && !i.Spacing.IsValid() {
-		return m.NewEnumError("Image.spacing", string(i.Spacing), m.AllowedSpacingStrings())
-	}
-
-	// Validate ID field (basic sanity checks)
-	if i.ID != "" {
-		id := strings.TrimSpace(i.ID)
-		if id == "" {
-			return fmt.Errorf("image.id cannot be empty or whitespace-only")
-		}
-		// ID should not contain certain characters that could cause issues
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("image.id cannot contain newlines or tabs")
-		}
-	}
-
-	return nil
-}
-
 // MarshalJSON ensures Type is always set.
 func (i Image) MarshalJSON() ([]byte, error) {
 	ii := i
@@ -297,6 +276,27 @@ func (i *Image) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	*i = val
+	return nil
+}
+
+func (i Image) validateElementBase() error {
+	// Validate spacing enum.
+	if i.Spacing != "" && !i.Spacing.IsValid() {
+		return m.NewEnumError("Image.spacing", string(i.Spacing), m.AllowedSpacingStrings())
+	}
+
+	// Validate ID field (basic sanity checks)
+	if i.ID != "" {
+		id := strings.TrimSpace(i.ID)
+		if id == "" {
+			return fmt.Errorf("image.id cannot be empty or whitespace-only")
+		}
+		// ID should not contain certain characters that could cause issues
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("image.id cannot contain newlines or tabs")
+		}
+	}
+
 	return nil
 }
 

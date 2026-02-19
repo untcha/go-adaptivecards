@@ -22,8 +22,6 @@ type ActionSubmit struct {
 	AssociatedInputs string       `json:"associatedInputs,omitempty"` // Version 1.3
 }
 
-func (a ActionSubmit) GetType() m.TypeString { return m.TypeActionSubmit }
-
 // NewActionSubmit creates an Action.Submit with an optional data payload.
 func NewActionSubmit(title string, data any) ActionSubmit {
 	return ActionSubmit{
@@ -32,6 +30,8 @@ func NewActionSubmit(title string, data any) ActionSubmit {
 		Data:       data,
 	}
 }
+
+func (a ActionSubmit) GetType() m.TypeString { return m.TypeActionSubmit }
 
 func (a ActionSubmit) Validate() error {
 	if a.AssociatedInputs != "" {

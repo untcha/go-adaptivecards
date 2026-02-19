@@ -22,8 +22,6 @@ type InputChoiceSet struct {
 	Wrap          bool               `json:"wrap,omitempty"`          // Version 1.2
 }
 
-func (i InputChoiceSet) GetType() m.TypeString { return m.TypeInputChoiceSet }
-
 // NewInputChoiceSet creates an Input.ChoiceSet with the specified id and choices.
 func NewInputChoiceSet(id string, choices ...InputChoice) InputChoiceSet {
 	return InputChoiceSet{
@@ -32,6 +30,8 @@ func NewInputChoiceSet(id string, choices ...InputChoice) InputChoiceSet {
 		Choices:   choices,
 	}
 }
+
+func (i InputChoiceSet) GetType() m.TypeString { return m.TypeInputChoiceSet }
 
 // Validate checks that the InputChoiceSet has valid fields.
 func (i InputChoiceSet) Validate() error {

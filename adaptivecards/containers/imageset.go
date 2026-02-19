@@ -20,8 +20,6 @@ type ImageSet struct {
 	ImageSize     m.ImageSize  `json:"imageSize,omitempty"` // Version 1.0
 }
 
-func (i ImageSet) GetType() m.TypeString { return m.TypeImageSet }
-
 func NewImageSet(images ...els.Image) ImageSet {
 	return ImageSet{
 		ElementBase: e.ElementBase{},
@@ -29,6 +27,8 @@ func NewImageSet(images ...els.Image) ImageSet {
 		Images:      images,
 	}
 }
+
+func (i ImageSet) GetType() m.TypeString { return m.TypeImageSet }
 
 func (i ImageSet) Validate() error {
 	if err := i.validateElementBase(); err != nil {
@@ -48,36 +48,6 @@ func (i ImageSet) Validate() error {
 			string(i.ImageSize),
 			m.AllowedImageSizeStrings(),
 		)
-	}
-	return nil
-}
-
-func (i ImageSet) normalizedImageSize() m.ImageSize {
-	if i.ImageSize == m.ImageSizeAuto || i.ImageSize == m.ImageSizeStretch {
-		return m.ImageSizeMedium
-	}
-	return i.ImageSize
-}
-
-func (i ImageSet) validateElementBase() error {
-	if i.Height != "" && !i.Height.IsValid() {
-		return m.NewEnumError(
-			"ImageSet.height",
-			string(i.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if i.Spacing != "" && !i.Spacing.IsValid() {
-		return m.NewEnumError("ImageSet.spacing", string(i.Spacing), m.AllowedSpacingStrings())
-	}
-	if i.ID != "" {
-		id := strings.TrimSpace(i.ID)
-		if id == "" {
-			return fmt.Errorf("imageSet.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("imageSet.id cannot contain newlines or tabs")
-		}
 	}
 	return nil
 }
@@ -110,6 +80,36 @@ func (i *ImageSet) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	*i = val
+	return nil
+}
+
+func (i ImageSet) normalizedImageSize() m.ImageSize {
+	if i.ImageSize == m.ImageSizeAuto || i.ImageSize == m.ImageSizeStretch {
+		return m.ImageSizeMedium
+	}
+	return i.ImageSize
+}
+
+func (i ImageSet) validateElementBase() error {
+	if i.Height != "" && !i.Height.IsValid() {
+		return m.NewEnumError(
+			"ImageSet.height",
+			string(i.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+	if i.Spacing != "" && !i.Spacing.IsValid() {
+		return m.NewEnumError("ImageSet.spacing", string(i.Spacing), m.AllowedSpacingStrings())
+	}
+	if i.ID != "" {
+		id := strings.TrimSpace(i.ID)
+		if id == "" {
+			return fmt.Errorf("imageSet.id cannot be empty or whitespace-only")
+		}
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("imageSet.id cannot contain newlines or tabs")
+		}
+	}
 	return nil
 }
 

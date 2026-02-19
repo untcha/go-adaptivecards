@@ -19,8 +19,6 @@ type TableRow struct {
 	VerticalCellContentAlignment   m.VerticalAlignment   `json:"verticalCellContentAlignment,omitempty"`   // Version 1.5
 }
 
-func (tr TableRow) GetType() m.TypeString { return m.TypeTableRow }
-
 // NewTableRow creates a new TableRow with the specified cells.
 func NewTableRow(cells ...TableCell) TableRow {
 	return TableRow{
@@ -36,6 +34,8 @@ func NewTableRowEmpty() TableRow {
 		Cells: make([]TableCell, 0),
 	}
 }
+
+func (tr TableRow) GetType() m.TypeString { return m.TypeTableRow }
 
 // Builder methods for TableRow.
 

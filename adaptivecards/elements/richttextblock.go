@@ -19,8 +19,6 @@ type RichTextBlock struct {
 	HorizontalAlignment m.HorizontalAlignment `json:"horizontalAlignment,omitempty"` // Version 1.2
 }
 
-func (r RichTextBlock) GetType() m.TypeString { return m.TypeRichTextBlock }
-
 func NewRichTextBlock(inlines ...TextRun) RichTextBlock {
 	return RichTextBlock{
 		ElementBase: e.ElementBase{},
@@ -28,6 +26,8 @@ func NewRichTextBlock(inlines ...TextRun) RichTextBlock {
 		Inlines:     inlines,
 	}
 }
+
+func (r RichTextBlock) GetType() m.TypeString { return m.TypeRichTextBlock }
 
 func (r RichTextBlock) Validate() error {
 	if err := r.validateElementBase(); err != nil {
@@ -47,29 +47,6 @@ func (r RichTextBlock) Validate() error {
 			string(r.HorizontalAlignment),
 			m.AllowedHorizontalAlignmentStrings(),
 		)
-	}
-	return nil
-}
-
-func (r RichTextBlock) validateElementBase() error {
-	if r.Height != "" && !r.Height.IsValid() {
-		return m.NewEnumError(
-			"RichTextBlock.height",
-			string(r.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if r.Spacing != "" && !r.Spacing.IsValid() {
-		return m.NewEnumError("RichTextBlock.spacing", string(r.Spacing), m.AllowedSpacingStrings())
-	}
-	if r.ID != "" {
-		id := strings.TrimSpace(r.ID)
-		if id == "" {
-			return fmt.Errorf("richTextBlock.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("richTextBlock.id cannot contain newlines or tabs")
-		}
 	}
 	return nil
 }
@@ -100,6 +77,29 @@ func (r *RichTextBlock) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	*r = val
+	return nil
+}
+
+func (r RichTextBlock) validateElementBase() error {
+	if r.Height != "" && !r.Height.IsValid() {
+		return m.NewEnumError(
+			"RichTextBlock.height",
+			string(r.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+	if r.Spacing != "" && !r.Spacing.IsValid() {
+		return m.NewEnumError("RichTextBlock.spacing", string(r.Spacing), m.AllowedSpacingStrings())
+	}
+	if r.ID != "" {
+		id := strings.TrimSpace(r.ID)
+		if id == "" {
+			return fmt.Errorf("richTextBlock.id cannot be empty or whitespace-only")
+		}
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("richTextBlock.id cannot contain newlines or tabs")
+		}
+	}
 	return nil
 }
 

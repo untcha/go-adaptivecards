@@ -20,6 +20,7 @@ linters:
   # Enable specific linter.
   enable:
     - errcheck # default
+    - funcorder
     - gocritic
     - gosec
     - govet # default

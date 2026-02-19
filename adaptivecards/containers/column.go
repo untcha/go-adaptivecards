@@ -27,14 +27,14 @@ type Column struct {
 	Width                    any                        `json:"width,omitempty"`                    // Version 1.0
 }
 
-func (c Column) GetType() m.TypeString { return m.TypeColumn }
-
 func NewColumn(items ...e.Element) Column {
 	return Column{
 		Type:  m.TypeColumn,
 		Items: items,
 	}
 }
+
+func (c Column) GetType() m.TypeString { return m.TypeColumn }
 
 func (c Column) Validate() error {
 	if err := c.validateElementBase(); err != nil {
@@ -88,22 +88,6 @@ func (c Column) Validate() error {
 			}
 		default:
 			return fmt.Errorf("column.width must be string or number")
-		}
-	}
-	return nil
-}
-
-func (c Column) validateElementBase() error {
-	if c.Spacing != "" && !c.Spacing.IsValid() {
-		return m.NewEnumError("Column.spacing", string(c.Spacing), m.AllowedSpacingStrings())
-	}
-	if c.ID != "" {
-		id := strings.TrimSpace(c.ID)
-		if id == "" {
-			return fmt.Errorf("column.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("column.id cannot contain newlines or tabs")
 		}
 	}
 	return nil
@@ -170,6 +154,22 @@ func (c *Column) UnmarshalJSON(b []byte) error {
 	}
 
 	*c = Column(base)
+	return nil
+}
+
+func (c Column) validateElementBase() error {
+	if c.Spacing != "" && !c.Spacing.IsValid() {
+		return m.NewEnumError("Column.spacing", string(c.Spacing), m.AllowedSpacingStrings())
+	}
+	if c.ID != "" {
+		id := strings.TrimSpace(c.ID)
+		if id == "" {
+			return fmt.Errorf("column.id cannot be empty or whitespace-only")
+		}
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("column.id cannot contain newlines or tabs")
+		}
+	}
 	return nil
 }
 

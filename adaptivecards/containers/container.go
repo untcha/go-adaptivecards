@@ -26,14 +26,14 @@ type Container struct {
 	Rtl                      *bool                      `json:"rtl,omitempty"`                      // Version 1.5
 }
 
-func (c Container) GetType() m.TypeString { return m.TypeContainer }
-
 func NewContainer(items ...e.Element) Container {
 	return Container{
 		Type:  m.TypeContainer,
 		Items: items,
 	}
 }
+
+func (c Container) GetType() m.TypeString { return m.TypeContainer }
 
 func (c Container) Validate() error {
 	if err := c.validateElementBase(); err != nil {
@@ -73,29 +73,6 @@ func (c Container) Validate() error {
 			"container.minHeight must be in format \"<number>px\" (got %q)",
 			c.MinHeight,
 		)
-	}
-	return nil
-}
-
-func (c Container) validateElementBase() error {
-	if c.Height != "" && !c.Height.IsValid() {
-		return m.NewEnumError(
-			"Container.height",
-			string(c.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if c.Spacing != "" && !c.Spacing.IsValid() {
-		return m.NewEnumError("Container.spacing", string(c.Spacing), m.AllowedSpacingStrings())
-	}
-	if c.ID != "" {
-		id := strings.TrimSpace(c.ID)
-		if id == "" {
-			return fmt.Errorf("container.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("container.id cannot contain newlines or tabs")
-		}
 	}
 	return nil
 }
@@ -162,6 +139,29 @@ func (c *Container) UnmarshalJSON(b []byte) error {
 	}
 
 	*c = Container(base)
+	return nil
+}
+
+func (c Container) validateElementBase() error {
+	if c.Height != "" && !c.Height.IsValid() {
+		return m.NewEnumError(
+			"Container.height",
+			string(c.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+	if c.Spacing != "" && !c.Spacing.IsValid() {
+		return m.NewEnumError("Container.spacing", string(c.Spacing), m.AllowedSpacingStrings())
+	}
+	if c.ID != "" {
+		id := strings.TrimSpace(c.ID)
+		if id == "" {
+			return fmt.Errorf("container.id cannot be empty or whitespace-only")
+		}
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("container.id cannot contain newlines or tabs")
+		}
+	}
 	return nil
 }
 

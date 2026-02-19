@@ -19,8 +19,6 @@ type ActionSet struct {
 	Actions       []a.Action   `json:"actions,omitempty"` // Version 1.2
 }
 
-func (as ActionSet) GetType() m.TypeString { return m.TypeActionSet }
-
 func NewActionSet(actions ...a.Action) ActionSet {
 	return ActionSet{
 		Type:    m.TypeActionSet,
@@ -28,35 +26,14 @@ func NewActionSet(actions ...a.Action) ActionSet {
 	}
 }
 
+func (as ActionSet) GetType() m.TypeString { return m.TypeActionSet }
+
 func (as ActionSet) Validate() error {
 	if err := as.validateElementBase(); err != nil {
 		return err
 	}
 	if err := validateActions(as.Actions); err != nil {
 		return fmt.Errorf("actionSet.actions: %w", err)
-	}
-	return nil
-}
-
-func (as ActionSet) validateElementBase() error {
-	if as.Height != "" && !as.Height.IsValid() {
-		return m.NewEnumError(
-			"ActionSet.height",
-			string(as.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if as.Spacing != "" && !as.Spacing.IsValid() {
-		return m.NewEnumError("ActionSet.spacing", string(as.Spacing), m.AllowedSpacingStrings())
-	}
-	if as.ID != "" {
-		id := strings.TrimSpace(as.ID)
-		if id == "" {
-			return fmt.Errorf("actionSet.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("actionSet.id cannot contain newlines or tabs")
-		}
 	}
 	return nil
 }
@@ -112,6 +89,29 @@ func (as *ActionSet) UnmarshalJSON(b []byte) error {
 	}
 
 	*as = ActionSet(base)
+	return nil
+}
+
+func (as ActionSet) validateElementBase() error {
+	if as.Height != "" && !as.Height.IsValid() {
+		return m.NewEnumError(
+			"ActionSet.height",
+			string(as.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+	if as.Spacing != "" && !as.Spacing.IsValid() {
+		return m.NewEnumError("ActionSet.spacing", string(as.Spacing), m.AllowedSpacingStrings())
+	}
+	if as.ID != "" {
+		id := strings.TrimSpace(as.ID)
+		if id == "" {
+			return fmt.Errorf("actionSet.id cannot be empty or whitespace-only")
+		}
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("actionSet.id cannot contain newlines or tabs")
+		}
+	}
 	return nil
 }
 

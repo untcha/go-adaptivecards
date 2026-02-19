@@ -17,8 +17,6 @@ type ActionToggleVisibility struct {
 	TargetElements []TargetElement `json:"targetElements,omitempty"` // Version 1.2
 }
 
-func (a ActionToggleVisibility) GetType() m.TypeString { return m.TypeActionToggleVisibility }
-
 func NewActionToggleVisibility(title string, targets ...TargetElement) ActionToggleVisibility {
 	return ActionToggleVisibility{
 		ActionBase:     ActionBase{Title: title},
@@ -26,6 +24,8 @@ func NewActionToggleVisibility(title string, targets ...TargetElement) ActionTog
 		TargetElements: targets,
 	}
 }
+
+func (a ActionToggleVisibility) GetType() m.TypeString { return m.TypeActionToggleVisibility }
 
 func (a ActionToggleVisibility) Validate() error {
 	if len(a.TargetElements) == 0 {

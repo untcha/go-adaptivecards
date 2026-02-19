@@ -18,14 +18,14 @@ type FactSet struct {
 	Facts         []Fact       `json:"facts,omitempty"` // Version 1.0
 }
 
-func (f FactSet) GetType() m.TypeString { return m.TypeFactSet }
-
 func NewFactSet(facts ...Fact) FactSet {
 	return FactSet{
 		Type:  m.TypeFactSet,
 		Facts: facts,
 	}
 }
+
+func (f FactSet) GetType() m.TypeString { return m.TypeFactSet }
 
 func (f FactSet) Validate() error {
 	if err := f.validateElementBase(); err != nil {
@@ -37,29 +37,6 @@ func (f FactSet) Validate() error {
 	for i, fact := range f.Facts {
 		if err := fact.Validate(); err != nil {
 			return fmt.Errorf("factSet.facts[%d]: %w", i, err)
-		}
-	}
-	return nil
-}
-
-func (f FactSet) validateElementBase() error {
-	if f.Height != "" && !f.Height.IsValid() {
-		return m.NewEnumError(
-			"FactSet.height",
-			string(f.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if f.Spacing != "" && !f.Spacing.IsValid() {
-		return m.NewEnumError("FactSet.spacing", string(f.Spacing), m.AllowedSpacingStrings())
-	}
-	if f.ID != "" {
-		id := strings.TrimSpace(f.ID)
-		if id == "" {
-			return fmt.Errorf("factSet.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("factSet.id cannot contain newlines or tabs")
 		}
 	}
 	return nil
@@ -91,6 +68,29 @@ func (f *FactSet) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	*f = val
+	return nil
+}
+
+func (f FactSet) validateElementBase() error {
+	if f.Height != "" && !f.Height.IsValid() {
+		return m.NewEnumError(
+			"FactSet.height",
+			string(f.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+	if f.Spacing != "" && !f.Spacing.IsValid() {
+		return m.NewEnumError("FactSet.spacing", string(f.Spacing), m.AllowedSpacingStrings())
+	}
+	if f.ID != "" {
+		id := strings.TrimSpace(f.ID)
+		if id == "" {
+			return fmt.Errorf("factSet.id cannot be empty or whitespace-only")
+		}
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("factSet.id cannot contain newlines or tabs")
+		}
+	}
 	return nil
 }
 

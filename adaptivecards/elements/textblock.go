@@ -27,8 +27,6 @@ type TextBlock struct {
 	Style               m.TextBlockStyle      `json:"style,omitempty"`               // Version 1.5
 }
 
-func (t TextBlock) GetType() m.TypeString { return m.TypeTextBlock }
-
 // NewTextBlockEmpty creates a TextBlock with empty text.
 func NewTextBlockEmpty() TextBlock {
 	return TextBlock{
@@ -45,6 +43,8 @@ func NewTextBlock(text string) TextBlock {
 		Text:        text,
 	}
 }
+
+func (t TextBlock) GetType() m.TypeString { return m.TypeTextBlock }
 
 // Fluent setters return a copy of TextBlock with the specified field set.
 
@@ -194,37 +194,6 @@ func (t TextBlock) Validate() error {
 	return nil
 }
 
-// validateElementBase validates inherited base element fields.
-func (t TextBlock) validateElementBase() error {
-	// Validate Height field (BlockElementHeight).
-	if t.Height != "" && !t.Height.IsValid() {
-		return m.NewEnumError(
-			"TextBlock.height",
-			fmt.Sprintf("%v", t.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-
-	// Validate spacing enum.
-	if t.Spacing != "" && !t.Spacing.IsValid() {
-		return m.NewEnumError("TextBlock.spacing", string(t.Spacing), m.AllowedSpacingStrings())
-	}
-
-	// Validate ID field (basic sanity checks)
-	if t.ID != "" {
-		id := strings.TrimSpace(t.ID)
-		if id == "" {
-			return fmt.Errorf("TextBlock.id cannot be empty or whitespace-only")
-		}
-		// ID should not contain certain characters that could cause issues
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("TextBlock.id cannot contain newlines or tabs")
-		}
-	}
-
-	return nil
-}
-
 // MarshalJSON ensures Type is always set.
 func (t TextBlock) MarshalJSON() ([]byte, error) {
 	tt := t
@@ -289,6 +258,37 @@ func (t *TextBlock) UnmarshalJSON(b []byte) error {
 	}
 
 	*t = TextBlock(tmp)
+	return nil
+}
+
+// validateElementBase validates inherited base element fields.
+func (t TextBlock) validateElementBase() error {
+	// Validate Height field (BlockElementHeight).
+	if t.Height != "" && !t.Height.IsValid() {
+		return m.NewEnumError(
+			"TextBlock.height",
+			fmt.Sprintf("%v", t.Height),
+			m.AllowedBlockElementHeightStrings(),
+		)
+	}
+
+	// Validate spacing enum.
+	if t.Spacing != "" && !t.Spacing.IsValid() {
+		return m.NewEnumError("TextBlock.spacing", string(t.Spacing), m.AllowedSpacingStrings())
+	}
+
+	// Validate ID field (basic sanity checks)
+	if t.ID != "" {
+		id := strings.TrimSpace(t.ID)
+		if id == "" {
+			return fmt.Errorf("TextBlock.id cannot be empty or whitespace-only")
+		}
+		// ID should not contain certain characters that could cause issues
+		if strings.ContainsAny(id, "\n\r\t") {
+			return fmt.Errorf("TextBlock.id cannot contain newlines or tabs")
+		}
+	}
+
 	return nil
 }
 
