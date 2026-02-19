@@ -43,3 +43,4 @@ formatters:
   # Default: [] (uses standard Go formatting)
   enable:
     - gofmt
+    - goimports
