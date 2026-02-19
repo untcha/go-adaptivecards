@@ -37,3 +37,9 @@ linters:
           disabled: true
         - name: exported
           disabled: true
+
+formatters:
+  # Enable specific formatter.
+  # Default: [] (uses standard Go formatting)
+  enable:
+    - gofmt

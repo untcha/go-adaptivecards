@@ -597,10 +597,10 @@ func TestBackgroundImageValueMarshalJSON(t *testing.T) {
 		}
 
 		// Unmarshal to verify structure
-			var result map[string]any
-			if err := json.Unmarshal(data, &result); err != nil {
-				t.Errorf("failed to unmarshal result: %v", err)
-				return
+		var result map[string]any
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Errorf("failed to unmarshal result: %v", err)
+			return
 		}
 
 		if result["url"] != "https://example.com/image.jpg" {
