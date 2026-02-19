@@ -84,6 +84,11 @@ tasks:
     cmds:
       - golangci-lint run -v ./...
 
+  lint:fmt:
+    desc: Run golangci-lint formatter
+    cmds:
+      - golangci-lint fmt ./...
+
   test:
     desc: Run Go tests
     cmds:
@@ -102,6 +107,10 @@ tasks:
     desc: Run all tests with verbose output and race detector
     cmds:
       - go test -v -race {{.GO_TEST_PKGS}}
+    sources:
+      - "**/*.go"
+      - go.mod
+      - go.sum
 
   test:existing:
     desc: Run tests in packages containing test files only
