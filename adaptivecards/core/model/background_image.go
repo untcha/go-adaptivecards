@@ -22,22 +22,6 @@ type BackgroundImageValue struct {
 	urlOnly string
 }
 
-// Object returns the object-form value when set.
-func (v *BackgroundImageValue) Object() *BackgroundImage {
-	if v == nil {
-		return nil
-	}
-	return v.obj
-}
-
-// URL returns the URL-form value when set.
-func (v *BackgroundImageValue) URL() string {
-	if v == nil {
-		return ""
-	}
-	return v.urlOnly
-}
-
 // validateBackgroundImageURL validates and normalizes a background image URL.
 // Returns the normalized URL string or an error if invalid.
 func validateBackgroundImageURL(u string) (string, error) {
@@ -251,6 +235,22 @@ func BackgroundImageURLUnchecked(u string) *BackgroundImageValue {
 // BackgroundImageObjectUnchecked stores a raw object without validation.
 func BackgroundImageObjectUnchecked(obj BackgroundImage) *BackgroundImageValue {
 	return &BackgroundImageValue{obj: &obj}
+}
+
+// Object returns the object-form value when set.
+func (v *BackgroundImageValue) Object() *BackgroundImage {
+	if v == nil {
+		return nil
+	}
+	return v.obj
+}
+
+// URL returns the URL-form value when set.
+func (v *BackgroundImageValue) URL() string {
+	if v == nil {
+		return ""
+	}
+	return v.urlOnly
 }
 
 // MarshalJSON implements custom JSON marshalling for BackgroundImageValue.
