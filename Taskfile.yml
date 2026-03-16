@@ -53,7 +53,7 @@ tasks:
       - rm -rf {{.COVERAGE_DIR}}
 
   clean:all:
-    desc: "Clean everything (builds, caches, coverage)"
+    desc: Clean everything (builds, caches, coverage)
     cmds:
       - task: clean
       - task: clean:caches
@@ -91,17 +91,17 @@ tasks:
   lint:
     desc: Run golangci-lint
     cmds:
-      - golangci-lint run ./...
+      - golangci-lint run
 
   lint:verbose:
     desc: Run golangci-lint with verbose output
     cmds:
-      - golangci-lint run -v ./...
+      - golangci-lint run -v
 
   lint:fmt:
     desc: Run golangci-lint formatter
     cmds:
-      - golangci-lint fmt ./...
+      - golangci-lint fmt
 
   test:
     desc: Run Go tests
