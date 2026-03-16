@@ -6,8 +6,9 @@ vars:
   SCHEMA_URL: "https://adaptivecards.io/schemas/{{.SCHEMA_VERSION}}/adaptive-card.json"
   SCHEMA_PATH: "internal/schema/adaptive-card.json"
 
+  # GO_LIST_TEST_FILTER is a Go template used to filter packages that contain test files
+  # (either regular test files or external test files).
   GO_LIST_TEST_FILTER: "{{`{{if or .TestGoFiles .XTestGoFiles}}{{.ImportPath}}{{end}}`}}"
-  GO_TEST_PKGS: "./..."
 
   COVERAGE_DIR: coverage
   COVERAGE_FILE: "{{.COVERAGE_DIR}}/coverage.out"
@@ -27,36 +28,49 @@ tasks:
       - "{{.SCHEMA_PATH}}"
 
   check:
-    desc: Run fmt, vet, lint, and tests
-    deps: [fmt, vet, lint, test]
+    desc: Run all checks (formatting, linting, tests)
+    cmds:
+      - task: fmt
+      - task: lint
+      - task: test:existing
 
   clean:
-    desc: Remove generated artifacts and Go caches
+    desc: Clean temp files and folders
     cmds:
-      - task clean:caches
-      - task clean:coverage
+      - rm -rf ./dist/
+      - rm -rf ./bin/
 
   clean:caches:
-    desc: Remove Go build and test caches
+    desc: Clean Go build and test caches
     cmds:
       - go clean -cache
       - go clean -testcache
+      - echo "Cleared Go build and test caches"
 
   clean:coverage:
-    desc: Remove generated coverage artifacts
+    desc: Clean coverage files
     cmds:
       - rm -rf {{.COVERAGE_DIR}}
 
+  clean:all:
+    desc: "Clean everything (builds, caches, coverage)"
+    cmds:
+      - task: clean
+      - task: clean:caches
+      - task: clean:coverage
+
   default:
-    desc: "Default task"
+    desc: Default task - show available tasks
     cmds:
       - task --list-all
+    silent: true
 
   deps:
     desc: Download and verify dependencies
     cmds:
       - go mod download
       - go mod verify
+      - go mod tidy
 
   deps:tidy:
     desc: Tidy dependencies (go.mod/go.sum)
@@ -67,7 +81,7 @@ tasks:
     desc: Update dependencies
     cmds:
       - go get -u ./...
-      - task: deps:tidy
+      - go mod tidy
 
   fmt:
     desc: Format Go code
@@ -92,21 +106,21 @@ tasks:
   test:
     desc: Run Go tests
     cmds:
-      - go test {{.GO_TEST_PKGS}}
-  sources:
-    - "**/*.go"
-    - go.mod
-    - go.sum
+      - go test ./...
+    sources:
+      - "**/*.go"
+      - go.mod
+      - go.sum
 
   test:fresh:
     desc: "Run Go tests with fresh cache"
     cmds:
-      - go test -count=1 {{.GO_TEST_PKGS}}
+      - go test -count=1 ./...
 
   test:verbose:
-    desc: Run all tests with verbose output and race detector
+    desc: Run Go tests with verbose output and race detector
     cmds:
-      - go test -v -race {{.GO_TEST_PKGS}}
+      - go test -v -race ./...
     sources:
       - "**/*.go"
       - go.mod
@@ -121,10 +135,10 @@ tasks:
       It also considers both test files in the same package and external test files (XTestGoFiles).
       e.g. a package with `package foo` and `foo_test.go` with `package foo_test`.
     cmds:
-      - go list -f '{{.GO_LIST_TEST_FILTER}}' {{.GO_TEST_PKGS}} | xargs -r go test
+      - go list -f '{{.GO_LIST_TEST_FILTER}}' ./... | xargs -r go test
 
   test:existing:verbose:
-    desc: Run tests in packages containing test files only with verbose output and race detector
+    desc: Run tests in packages containing test files only with verbose output
     summary: |
       This task lists all packages that contain test files and runs tests only in those packages.
       This helps to avoid cluttering the output with "[no test files]" messages from packages without tests.
@@ -132,13 +146,13 @@ tasks:
       It also considers both test files in the same package and external test files (XTestGoFiles).
       e.g. a package with `package foo` and `foo_test.go` with `package foo_test`.
     cmds:
-      - go list -f '{{.GO_LIST_TEST_FILTER}}' {{.GO_TEST_PKGS}} | xargs -r go test -v -race
+      - go list -f '{{.GO_LIST_TEST_FILTER}}' ./... | xargs -r go test -v
 
   test:coverage:
-    desc: Run all tests with coverage summary
+    desc: Run tests with coverage
     cmds:
       - mkdir -p {{.COVERAGE_DIR}}
-      - go test -coverprofile={{.COVERAGE_FILE}} -covermode=atomic {{.GO_TEST_PKGS}}
+      - go test -coverprofile={{.COVERAGE_FILE}} -covermode=atomic ./...
       - go tool cover -html={{.COVERAGE_FILE}} -o {{.COVERAGE_HTML}}
       - echo "Coverage report generated at {{.COVERAGE_HTML}}"
     sources:
@@ -161,22 +175,25 @@ tasks:
         platforms: [windows]
 
   test:watch:
-    desc: Watch for changes and run all tests
+    desc: Watch for changes and run tests automatically
+    deps: [test]
     watch: true
     sources:
       - "**/*.go"
+      - go.mod
+      - go.sum
     cmds:
-      - task test
+      - task: test:existing
 
   # test:background-image:
   #   desc: Run background-image related tests across all packages
   #   cmds:
-  #     - go test -v {{.GO_TEST_PKGS}} -run "{{.BG_TEST_REGEX}}"
+  #     - go test -v ./... -run "{{.BG_TEST_REGEX}}"
 
   # test:background-image:coverage:
   #   desc: Run background-image related tests with coverage summary
   #   cmds:
-  #     - go test -coverprofile={{.BG_COVERAGE_OUT}} {{.GO_TEST_PKGS}} -run "{{.BG_TEST_REGEX}}"
+  #     - go test -coverprofile={{.BG_COVERAGE_OUT}} ./... -run "{{.BG_TEST_REGEX}}"
   #     - go tool cover -func={{.BG_COVERAGE_OUT}}
 
   # test:background-image:coverage:html:
