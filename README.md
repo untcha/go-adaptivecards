@@ -1,3 +1,5 @@
+![go-adaptivecards README header](assets/readme-header.png)
+
 # go-adaptivecards
 
 Experimental Go library for building and validating Microsoft [Adaptive Cards](https://adaptivecards.io/).
