@@ -10,7 +10,9 @@ versions (see the status note in the README).
 
 ## [Unreleased]
 
-_Targeted for `v0.2.0`._
+_Targeted for `v0.3.0`._
+
+## [0.2.0] - 2026-06-02
 
 ### Added
 
@@ -44,5 +46,5 @@ _Targeted for `v0.2.0`._
   an optional Teams/workflow webhook helper. See the README feature matrix for
   the implemented surface.
 
-[Unreleased]: https://github.com/untcha/go-adaptivecards/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/untcha/go-adaptivecards/releases/tag/v0.1.0
+[Unreleased]: https://github.com/untcha/go-adaptivecards/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/untcha/go-adaptivecards/compare/v0.1.0...v0.2.0
