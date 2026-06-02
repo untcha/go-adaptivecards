@@ -3,7 +3,6 @@ package containers
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	e "github.com/untcha/go-adaptivecards/adaptivecards/core/element"
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
@@ -171,6 +170,9 @@ func (t Table) WithSeparator(separator bool) Table {
 
 // WithSpacing sets the m.Spacing field
 func (t Table) WithSpacing(spacing m.Spacing) Table { t.Spacing = spacing; return t }
+
+// WithTargetWidth sets the TargetWidth field (responsive visibility).
+func (t Table) WithTargetWidth(tw m.TargetWidth) Table { t.TargetWidth = tw; return t }
 
 // WithID sets the ID field
 func (t Table) WithID(id string) Table { t.ID = id; return t }
@@ -341,33 +343,7 @@ func (t *Table) UnmarshalJSON(b []byte) error {
 
 // validateElementBase validates the inherited e.ElementBase fields
 func (t Table) validateElementBase() error {
-	// Validate Height field
-	if t.Height != "" && !t.Height.IsValid() {
-		return m.NewEnumError(
-			"Table.height",
-			string(t.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-
-	// Validate m.Spacing enum
-	if t.Spacing != "" && !t.Spacing.IsValid() {
-		return m.NewEnumError("Table.spacing", string(t.Spacing), m.AllowedSpacingStrings())
-	}
-
-	// Validate ID field (basic sanity checks)
-	if t.ID != "" {
-		id := strings.TrimSpace(t.ID)
-		if id == "" {
-			return fmt.Errorf("table.id cannot be empty or whitespace-only")
-		}
-		// ID should not contain certain characters that could cause issues
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("table.id cannot contain newlines or tabs")
-		}
-	}
-
-	return nil
+	return t.ElementBase.Validate("Table")
 }
 
 // Register Table in the element registry

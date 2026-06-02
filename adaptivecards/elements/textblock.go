@@ -3,7 +3,6 @@ package elements
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	e "github.com/untcha/go-adaptivecards/adaptivecards/core/element"
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
@@ -130,6 +129,9 @@ func (t TextBlock) WithSeparator(separator bool) TextBlock {
 
 // WithSpacing sets the Spacing field.
 func (t TextBlock) WithSpacing(spacing m.Spacing) TextBlock { t.Spacing = spacing; return t }
+
+// WithTargetWidth sets the TargetWidth field (responsive visibility).
+func (t TextBlock) WithTargetWidth(tw m.TargetWidth) TextBlock { t.TargetWidth = tw; return t }
 
 // WithID sets the ID field.
 func (t TextBlock) WithID(id string) TextBlock { t.ID = id; return t }
@@ -263,33 +265,7 @@ func (t *TextBlock) UnmarshalJSON(b []byte) error {
 
 // validateElementBase validates inherited base element fields.
 func (t TextBlock) validateElementBase() error {
-	// Validate Height field (BlockElementHeight).
-	if t.Height != "" && !t.Height.IsValid() {
-		return m.NewEnumError(
-			"TextBlock.height",
-			fmt.Sprintf("%v", t.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-
-	// Validate spacing enum.
-	if t.Spacing != "" && !t.Spacing.IsValid() {
-		return m.NewEnumError("TextBlock.spacing", string(t.Spacing), m.AllowedSpacingStrings())
-	}
-
-	// Validate ID field (basic sanity checks)
-	if t.ID != "" {
-		id := strings.TrimSpace(t.ID)
-		if id == "" {
-			return fmt.Errorf("TextBlock.id cannot be empty or whitespace-only")
-		}
-		// ID should not contain certain characters that could cause issues
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("TextBlock.id cannot contain newlines or tabs")
-		}
-	}
-
-	return nil
+	return t.ElementBase.Validate("TextBlock")
 }
 
 // Register TextBlock in the element registry.

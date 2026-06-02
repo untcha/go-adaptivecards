@@ -12,6 +12,29 @@ versions (see the status note in the README).
 
 _Targeted for `v0.3.0`._
 
+### Added
+
+- **`targetWidth` responsive visibility** on all elements (`ElementBase`). Lets an
+  element declare at which card widths it renders — bare buckets (`veryNarrow`,
+  `narrow`, `standard`, `wide`) or range forms (`atLeast:<bucket>`,
+  `atMost:<bucket>`). Like `msteams`, this is a documented Adaptive Cards host
+  feature that is **not** part of the published JSON schema; it is validated
+  logically and stripped before strict schema validation.
+  - `m.TargetWidth` enum with `TargetWidthAtLeast`/`TargetWidthAtMost` builders,
+    `IsValid()`, `ParseTargetWidth`, and `AllowedTargetWidthStrings()`.
+  - `WithTargetWidth(...)` fluent setters on `TextBlock`, `Image`, and `Table`.
+  - `examples/responsive/main.go`.
+
+### Changed
+
+- Centralized the per-element `validateElementBase()` logic into a single shared
+  `ElementBase.Validate(typeName)` (previously duplicated across 10 element/
+  container files). Base-field validation error messages now consistently use the
+  capitalized element type name (e.g. `Image.id`, previously `image.id`).
+- `schema.Validate` recursively strips non-schema host keys (currently
+  `targetWidth`) at any depth before validating, so nested responsive elements
+  pass strict schema validation.
+
 ## [0.2.0] - 2026-06-02
 
 ### Added
