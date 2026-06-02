@@ -313,6 +313,45 @@ func (c *Card) SetCardRtl(rtl bool) *Card {
 	return c
 }
 
+// ---- Card - MSTeams host extension builder methods ----
+
+// SetFullWidth makes the card span the full message column in Teams clients
+// by setting msteams.width = "Full". Passing false clears only the width
+// sub-field, leaving any other MSTeams extensions intact.
+//
+// msteams is a Teams host extension, not part of the Adaptive Cards schema;
+// other renderers ignore it.
+func (c *Card) SetFullWidth(full bool) *Card {
+	if c == nil || c.buildErr != nil {
+		return c
+	}
+	if !full {
+		if c.MSTeams != nil {
+			c.MSTeams.Width = ""
+		}
+		return c
+	}
+	if c.MSTeams == nil {
+		c.MSTeams = &MSTeams{}
+	}
+	c.MSTeams.Width = MSTeamsWidthFull
+	return c
+}
+
+// SetMSTeams sets the full Teams host-extension object on the card.
+// It validates the extension immediately and records buildErr on failure.
+func (c *Card) SetMSTeams(t MSTeams) *Card {
+	if c == nil || c.buildErr != nil {
+		return c
+	}
+	if err := t.Validate(); err != nil {
+		c.buildErr = err
+		return c
+	}
+	c.MSTeams = &t
+	return c
+}
+
 // ---- Card - VerticalContentAlignment builder method ----
 
 // SetVerticalContentAlignment sets the Card's verticalContentAlignment property.
