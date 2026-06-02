@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+# Project-specific tasks for go-adaptivecards.
+# Included by the generic Taskfile.yml under the "project:" namespace,
+# so run these as e.g. `task project:update:schema`.
+
+vars:
+    SCHEMA_VERSION: "1.5.0"
+    SCHEMA_URL: "https://adaptivecards.io/schemas/{{.SCHEMA_VERSION}}/adaptive-card.json"
+    SCHEMA_PATH: "internal/schema/adaptive-card.json"
+
+tasks:
+    update:schema:
+        desc: Download Adaptive Cards schema version {{.SCHEMA_VERSION}}
+        cmds:
+            - mkdir -p internal/schema
+            - curl -fsSL {{.SCHEMA_URL}} -o {{.SCHEMA_PATH}}
+        generates:
+            - "{{.SCHEMA_PATH}}"
