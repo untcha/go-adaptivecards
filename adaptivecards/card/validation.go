@@ -26,8 +26,18 @@ func (c *Card) Validate() error {
 		return err
 	}
 
-	// 3) Full JSON Schema validation (strict, spec-accurate)
-	if err := schema.Validate(c); err != nil {
+	// 3) Full JSON Schema validation (strict, spec-accurate).
+	// msteams is a Teams host extension, not part of the Adaptive Cards
+	// schema (which sets additionalProperties:false on AdaptiveCard).
+	// Strip it from a shallow copy so schema validation only covers the
+	// spec-defined fields; the extension is validated logically above.
+	toValidate := c
+	if c.MSTeams != nil {
+		cc := *c
+		cc.MSTeams = nil
+		toValidate = &cc
+	}
+	if err := schema.Validate(toValidate); err != nil {
 		return err
 	}
 	return nil
@@ -46,6 +56,12 @@ func (c *Card) validateLogical() error {
 	if c.SelectAction != nil {
 		if err := validateSelectAction(c.SelectAction); err != nil {
 			return fmt.Errorf("selectAction: %w", err)
+		}
+	}
+	// Validate MSTeams host extension (not part of the AC schema)
+	if c.MSTeams != nil {
+		if err := c.MSTeams.Validate(); err != nil {
+			return fmt.Errorf("msteams: %w", err)
 		}
 	}
 	// Validate BackgroundImage

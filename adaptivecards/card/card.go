@@ -38,6 +38,7 @@ type Card struct {
 	MetaData                 any                        `json:"metadata,omitempty"`                 // Version 1.6 - not yet implemented
 	MinHeight                string                     `json:"minHeight,omitempty"`                // Version 1.2
 	Rtl                      *bool                      `json:"rtl,omitempty"`                      // Version 1.5 - supports null
+	MSTeams                  *MSTeams                   `json:"msteams,omitempty"`                  // Teams host extension; not in AC schema
 	Speak                    string                     `json:"speak,omitempty"`                    // Version 1.0
 	Lang                     string                     `json:"lang,omitempty"`                     // Version 1.0
 	VerticalContentAlignment m.VerticalContentAlignment `json:"verticalContentAlignment,omitempty"` // Version 1.1
