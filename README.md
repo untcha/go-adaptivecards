@@ -159,8 +159,11 @@ Common commands:
 task test
 task lint
 task check
-task update:schema
+task project:update:schema
 ```
+
+`Taskfile.yml` holds the generic Go-library tasks (shared across repos); repo-specific
+tasks live in `Taskfile.project.yml` and are included under the `project:` namespace.
 
 ## License
 
