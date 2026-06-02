@@ -3,7 +3,6 @@ package elements
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	e "github.com/untcha/go-adaptivecards/adaptivecards/core/element"
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
@@ -81,26 +80,7 @@ func (r *RichTextBlock) UnmarshalJSON(b []byte) error {
 }
 
 func (r RichTextBlock) validateElementBase() error {
-	if r.Height != "" && !r.Height.IsValid() {
-		return m.NewEnumError(
-			"RichTextBlock.height",
-			string(r.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if r.Spacing != "" && !r.Spacing.IsValid() {
-		return m.NewEnumError("RichTextBlock.spacing", string(r.Spacing), m.AllowedSpacingStrings())
-	}
-	if r.ID != "" {
-		id := strings.TrimSpace(r.ID)
-		if id == "" {
-			return fmt.Errorf("richTextBlock.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("richTextBlock.id cannot contain newlines or tabs")
-		}
-	}
-	return nil
+	return r.ElementBase.Validate("RichTextBlock")
 }
 
 func init() {

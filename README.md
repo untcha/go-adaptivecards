@@ -139,6 +139,11 @@ Legend:
 - [x] Embedded Adaptive Card schema validation support
 - [x] Webhook helper (`webhook.PostToWorkflowRaw`)
 
+### Host extensions (not part of the AC schema)
+
+- [x] `msteams.width` full-width cards (`Card.SetFullWidth`)
+- [x] `targetWidth` per-element responsive visibility (`WithTargetWidth`)
+
 ## Package Layout
 
 - `adaptivecards/card`: AdaptiveCard root model and card-level builders/validation

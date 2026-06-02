@@ -82,7 +82,7 @@ func TestImageValidateErrorUsesImageFieldNamesForID(t *testing.T) {
 	if err == nil {
 		t.Fatalf("expected validation error")
 	}
-	if !strings.Contains(err.Error(), "image.id") {
+	if !strings.Contains(err.Error(), "Image.id") {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }

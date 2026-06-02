@@ -3,7 +3,6 @@ package containers
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	a "github.com/untcha/go-adaptivecards/adaptivecards/actions"
 	e "github.com/untcha/go-adaptivecards/adaptivecards/core/element"
@@ -93,26 +92,7 @@ func (as *ActionSet) UnmarshalJSON(b []byte) error {
 }
 
 func (as ActionSet) validateElementBase() error {
-	if as.Height != "" && !as.Height.IsValid() {
-		return m.NewEnumError(
-			"ActionSet.height",
-			string(as.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if as.Spacing != "" && !as.Spacing.IsValid() {
-		return m.NewEnumError("ActionSet.spacing", string(as.Spacing), m.AllowedSpacingStrings())
-	}
-	if as.ID != "" {
-		id := strings.TrimSpace(as.ID)
-		if id == "" {
-			return fmt.Errorf("actionSet.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("actionSet.id cannot contain newlines or tabs")
-		}
-	}
-	return nil
+	return as.ElementBase.Validate("ActionSet")
 }
 
 func init() {

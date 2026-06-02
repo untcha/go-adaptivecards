@@ -125,6 +125,9 @@ func (i Image) WithSeparator(separator bool) Image {
 // WithSpacing sets the Spacing field.
 func (i Image) WithSpacing(spacing m.Spacing) Image { i.Spacing = spacing; return i }
 
+// WithTargetWidth sets the TargetWidth field (responsive visibility).
+func (i Image) WithTargetWidth(tw m.TargetWidth) Image { i.TargetWidth = tw; return i }
+
 // WithID sets the ID field.
 func (i Image) WithID(id string) Image { i.ID = id; return i }
 
@@ -280,24 +283,7 @@ func (i *Image) UnmarshalJSON(b []byte) error {
 }
 
 func (i Image) validateElementBase() error {
-	// Validate spacing enum.
-	if i.Spacing != "" && !i.Spacing.IsValid() {
-		return m.NewEnumError("Image.spacing", string(i.Spacing), m.AllowedSpacingStrings())
-	}
-
-	// Validate ID field (basic sanity checks)
-	if i.ID != "" {
-		id := strings.TrimSpace(i.ID)
-		if id == "" {
-			return fmt.Errorf("image.id cannot be empty or whitespace-only")
-		}
-		// ID should not contain certain characters that could cause issues
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("image.id cannot contain newlines or tabs")
-		}
-	}
-
-	return nil
+	return i.ElementBase.Validate("Image")
 }
 
 // Register Image in the element registry.

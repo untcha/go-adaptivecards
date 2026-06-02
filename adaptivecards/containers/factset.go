@@ -3,7 +3,6 @@ package containers
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	e "github.com/untcha/go-adaptivecards/adaptivecards/core/element"
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
@@ -72,26 +71,7 @@ func (f *FactSet) UnmarshalJSON(b []byte) error {
 }
 
 func (f FactSet) validateElementBase() error {
-	if f.Height != "" && !f.Height.IsValid() {
-		return m.NewEnumError(
-			"FactSet.height",
-			string(f.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if f.Spacing != "" && !f.Spacing.IsValid() {
-		return m.NewEnumError("FactSet.spacing", string(f.Spacing), m.AllowedSpacingStrings())
-	}
-	if f.ID != "" {
-		id := strings.TrimSpace(f.ID)
-		if id == "" {
-			return fmt.Errorf("factSet.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("factSet.id cannot contain newlines or tabs")
-		}
-	}
-	return nil
+	return f.ElementBase.Validate("FactSet")
 }
 
 func init() {

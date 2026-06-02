@@ -3,7 +3,6 @@ package containers
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	e "github.com/untcha/go-adaptivecards/adaptivecards/core/element"
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
@@ -91,26 +90,7 @@ func (i ImageSet) normalizedImageSize() m.ImageSize {
 }
 
 func (i ImageSet) validateElementBase() error {
-	if i.Height != "" && !i.Height.IsValid() {
-		return m.NewEnumError(
-			"ImageSet.height",
-			string(i.Height),
-			m.AllowedBlockElementHeightStrings(),
-		)
-	}
-	if i.Spacing != "" && !i.Spacing.IsValid() {
-		return m.NewEnumError("ImageSet.spacing", string(i.Spacing), m.AllowedSpacingStrings())
-	}
-	if i.ID != "" {
-		id := strings.TrimSpace(i.ID)
-		if id == "" {
-			return fmt.Errorf("imageSet.id cannot be empty or whitespace-only")
-		}
-		if strings.ContainsAny(id, "\n\r\t") {
-			return fmt.Errorf("imageSet.id cannot contain newlines or tabs")
-		}
-	}
-	return nil
+	return i.ElementBase.Validate("ImageSet")
 }
 
 func init() {

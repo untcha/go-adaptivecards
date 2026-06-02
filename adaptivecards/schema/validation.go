@@ -65,10 +65,47 @@ func Validate(v any) error {
 	if err := json.Unmarshal(b, &normalized); err != nil {
 		return fmt.Errorf("prepare for validation: %w", err)
 	}
+	// Remove documented host features / extensions that are not part of the
+	// published JSON schema (which uses additionalProperties:false). They are
+	// validated logically by the model, not by the schema.
+	normalized = stripNonSchemaKeys(normalized)
 	if err := compiled.Validate(normalized); err != nil {
 		return fmt.Errorf("adaptive card schema: %w", err)
 	}
 	return nil
+}
+
+// nonSchemaKeys lists JSON property names that are valid Adaptive Cards host
+// features but are absent from the published JSON schema. They are stripped
+// (at any depth) before strict schema validation.
+//
+// Note: the card-root "msteams" extension is stripped by Card.Validate before
+// it ever reaches here; this set covers fields that live on nested elements.
+var nonSchemaKeys = map[string]struct{}{
+	"targetWidth": {}, // documented responsive-visibility feature; not in any schema version
+}
+
+// stripNonSchemaKeys recursively removes nonSchemaKeys entries from a decoded
+// JSON value (map/slice tree).
+func stripNonSchemaKeys(v any) any {
+	switch x := v.(type) {
+	case map[string]any:
+		out := make(map[string]any, len(x))
+		for k, vv := range x {
+			if _, drop := nonSchemaKeys[k]; drop {
+				continue
+			}
+			out[k] = stripNonSchemaKeys(vv)
+		}
+		return out
+	case []any:
+		for i := range x {
+			x[i] = stripNonSchemaKeys(x[i])
+		}
+		return x
+	default:
+		return v
+	}
 }
 
 func normalizeOptionalKeySuffix(v any) any {
