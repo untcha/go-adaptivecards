@@ -24,6 +24,12 @@ func main() {
 		panic(err)
 	}
 
+	// Validate runs logical checks and validates against the embedded
+	// Adaptive Cards JSON Schema before the card is sent or serialized.
+	if err := card.Validate(); err != nil {
+		panic(err)
+	}
+
 	json, _ := card.MarshalJSON()
 	fmt.Println(string(json))
 
