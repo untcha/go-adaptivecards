@@ -8,8 +8,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Input.Number
-// Allows a user to enter a number.
+// InputNumber represents an Input.Number element that allows a user to enter a number.
 // See: https://adaptivecards.io/explorer/Input.Number.html
 type InputNumber struct {
 	InputBase
@@ -20,6 +19,7 @@ type InputNumber struct {
 	Value       *float64     `json:"value,omitempty"`       // Version 1.0
 }
 
+// NewInputNumber creates an Input.Number with the specified id.
 func NewInputNumber(id string) InputNumber {
 	return InputNumber{
 		InputBase: InputBase{ElementBase: e.ElementBase{ID: id}},
@@ -27,8 +27,10 @@ func NewInputNumber(id string) InputNumber {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Input.Number.
 func (i InputNumber) GetType() m.TypeString { return m.TypeInputNumber }
 
+// Validate checks that the InputNumber has valid fields.
 func (i InputNumber) Validate() error {
 	if err := i.validateInputBase("input.number"); err != nil {
 		return err
@@ -36,6 +38,7 @@ func (i InputNumber) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (i InputNumber) MarshalJSON() ([]byte, error) {
 	ii := i
 	if ii.Type == "" {
@@ -45,6 +48,7 @@ func (i InputNumber) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ii))
 }
 
+// UnmarshalJSON implements json.Unmarshaler and validates the decoded value.
 func (i *InputNumber) UnmarshalJSON(b []byte) error {
 	type alias InputNumber
 	var tmp alias

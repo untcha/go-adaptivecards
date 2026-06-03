@@ -7,8 +7,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Fact
-// Describes a Fact in a FactSet as a key/value pair.
+// Fact describes a fact in a FactSet as a key/value pair.
 // See: https://adaptivecards.io/explorer/Fact.html
 type Fact struct {
 	Type  m.TypeString `json:"type,omitempty"`
@@ -16,6 +15,7 @@ type Fact struct {
 	Value string       `json:"value"` // Version 1.0
 }
 
+// NewFact returns a Fact with the given title and value.
 func NewFact(title, value string) Fact {
 	return Fact{
 		Type:  "Fact",
@@ -24,6 +24,7 @@ func NewFact(title, value string) Fact {
 	}
 }
 
+// Validate reports whether the Fact has a non-empty title and value.
 func (f Fact) Validate() error {
 	if strings.TrimSpace(f.Title) == "" {
 		return fmt.Errorf("fact.title is required")

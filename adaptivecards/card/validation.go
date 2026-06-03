@@ -12,6 +12,10 @@ import (
 	"github.com/untcha/go-adaptivecards/adaptivecards/schema"
 )
 
+// Validate checks the Card in three stages: first any accumulated builder
+// errors, then logical per-element validation, and finally JSON-schema
+// validation against the spec (with the Teams-only msteams extension stripped
+// from a shallow copy so it does not violate additionalProperties:false).
 func (c *Card) Validate() error {
 	if c == nil {
 		return errors.New("card is nil")

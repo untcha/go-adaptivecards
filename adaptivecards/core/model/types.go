@@ -1,9 +1,12 @@
 package model
 
-// Type markers used in JSON
+// TypeString is the JSON "type" discriminator string used across Adaptive Card objects.
 type TypeString string
+
+// URI is a string holding a URI/URL value as serialized in card JSON.
 type URI string
 
+// Type marker constants for the supported Adaptive Card object types.
 const (
 	// Cards
 	TypeAdaptiveCard TypeString = "AdaptiveCard"

@@ -9,8 +9,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Input.Toggle
-// Lets a user choose between two options.
+// InputToggle represents an Input.Toggle element that lets a user choose between two options.
 // See: https://adaptivecards.io/explorer/Input.Toggle.html
 type InputToggle struct {
 	InputBase
@@ -22,6 +21,7 @@ type InputToggle struct {
 	Wrap     bool         `json:"wrap,omitempty"`     // Version 1.2
 }
 
+// NewInputToggle creates an Input.Toggle with the specified id and title.
 func NewInputToggle(id, title string) InputToggle {
 	return InputToggle{
 		InputBase: InputBase{ElementBase: e.ElementBase{ID: id}},
@@ -32,8 +32,10 @@ func NewInputToggle(id, title string) InputToggle {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Input.Toggle.
 func (i InputToggle) GetType() m.TypeString { return m.TypeInputToggle }
 
+// Validate checks that the InputToggle has valid fields.
 func (i InputToggle) Validate() error {
 	if err := i.validateInputBase("input.toggle"); err != nil {
 		return err
@@ -44,6 +46,7 @@ func (i InputToggle) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (i InputToggle) MarshalJSON() ([]byte, error) {
 	ii := i
 	if ii.Type == "" {
@@ -59,6 +62,7 @@ func (i InputToggle) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ii))
 }
 
+// UnmarshalJSON implements json.Unmarshaler and validates the decoded value.
 func (i *InputToggle) UnmarshalJSON(b []byte) error {
 	type alias InputToggle
 	var tmp alias

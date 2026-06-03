@@ -9,8 +9,7 @@ import (
 	els "github.com/untcha/go-adaptivecards/adaptivecards/elements"
 )
 
-// TableRow
-// Represents a row of cells within a Table element.
+// TableRow represents a row of cells within a Table element.
 type TableRow struct {
 	Type                           m.TypeString          `json:"type"`                                     // Version 1.5
 	Cells                          []TableCell           `json:"cells,omitempty"`                          // Version 1.5
@@ -35,6 +34,7 @@ func NewTableRowEmpty() TableRow {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for TableRow.
 func (tr TableRow) GetType() m.TypeString { return m.TypeTableRow }
 
 // Builder methods for TableRow.

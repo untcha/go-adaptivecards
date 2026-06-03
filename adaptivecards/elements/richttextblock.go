@@ -9,8 +9,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// RichTextBlock
-// Defines an array of inlines, allowing for inline text formatting.
+// RichTextBlock defines an array of inlines, allowing for inline text formatting.
 // See: https://adaptivecards.io/explorer/RichTextBlock.html
 type RichTextBlock struct {
 	e.ElementBase
@@ -19,6 +18,7 @@ type RichTextBlock struct {
 	HorizontalAlignment m.HorizontalAlignment `json:"horizontalAlignment,omitempty"` // Version 1.2
 }
 
+// NewRichTextBlock creates a RichTextBlock with the specified inline TextRuns.
 func NewRichTextBlock(inlines ...TextRun) RichTextBlock {
 	return RichTextBlock{
 		ElementBase: e.ElementBase{},
@@ -27,8 +27,10 @@ func NewRichTextBlock(inlines ...TextRun) RichTextBlock {
 	}
 }
 
+// GetType returns the element type of the RichTextBlock.
 func (r RichTextBlock) GetType() m.TypeString { return m.TypeRichTextBlock }
 
+// Validate checks that the RichTextBlock has valid fields.
 func (r RichTextBlock) Validate() error {
 	if err := r.validateElementBase(); err != nil {
 		return err
@@ -51,6 +53,7 @@ func (r RichTextBlock) Validate() error {
 	return nil
 }
 
+// MarshalJSON ensures Type is always set.
 func (r RichTextBlock) MarshalJSON() ([]byte, error) {
 	rr := r
 	if rr.Type == "" {
@@ -60,6 +63,7 @@ func (r RichTextBlock) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(rr))
 }
 
+// UnmarshalJSON decodes RichTextBlock from JSON.
 func (r *RichTextBlock) UnmarshalJSON(b []byte) error {
 	type alias RichTextBlock
 	var tmp alias

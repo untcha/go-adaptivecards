@@ -8,8 +8,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Input.Date
-// Lets a user choose a date.
+// InputDate represents an Input.Date element that lets a user choose a date.
 // See: https://adaptivecards.io/explorer/Input.Date.html
 type InputDate struct {
 	InputBase
@@ -20,6 +19,7 @@ type InputDate struct {
 	Value       string       `json:"value,omitempty"`       // Version 1.0
 }
 
+// NewInputDate creates an Input.Date with the specified id.
 func NewInputDate(id string) InputDate {
 	return InputDate{
 		InputBase: InputBase{ElementBase: e.ElementBase{ID: id}},
@@ -27,8 +27,10 @@ func NewInputDate(id string) InputDate {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Input.Date.
 func (i InputDate) GetType() m.TypeString { return m.TypeInputDate }
 
+// Validate checks that the InputDate has valid fields.
 func (i InputDate) Validate() error {
 	if err := i.validateInputBase("input.date"); err != nil {
 		return err
@@ -36,6 +38,7 @@ func (i InputDate) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (i InputDate) MarshalJSON() ([]byte, error) {
 	ii := i
 	if ii.Type == "" {
@@ -45,6 +48,7 @@ func (i InputDate) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ii))
 }
 
+// UnmarshalJSON implements json.Unmarshaler and validates the decoded value.
 func (i *InputDate) UnmarshalJSON(b []byte) error {
 	type alias InputDate
 	var tmp alias

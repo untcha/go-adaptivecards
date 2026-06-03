@@ -10,8 +10,7 @@ import (
 
 const targetElementType = "TargetElement"
 
-// TargetElement
-// Represents an entry for Action.ToggleVisibility's targetElements property
+// TargetElement represents an entry for Action.ToggleVisibility's targetElements property.
 // See: https://adaptivecards.io/explorer/TargetElement.html
 type TargetElement struct {
 	Type      m.TypeString `json:"type,omitempty"`
@@ -19,6 +18,7 @@ type TargetElement struct {
 	IsVisible *bool        `json:"isVisible,omitempty"`
 }
 
+// UnmarshalJSON decodes a TargetElement from either a bare elementId string or a full object.
 func (t *TargetElement) UnmarshalJSON(b []byte) error {
 	var id string
 	if err := json.Unmarshal(b, &id); err == nil {

@@ -10,8 +10,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Image
-// Displays an image. Acceptable formats are PNG, JPEG, and GIF
+// Image displays an image. Acceptable formats are PNG, JPEG, and GIF.
 // See: https://adaptivecards.io/explorer/Image.html
 type Image struct {
 	e.ElementBase                             // Embedding e.ElementBase to include common element fields
@@ -44,6 +43,7 @@ func NewImage(u string) Image {
 	}
 }
 
+// GetType returns the element type of the Image.
 func (i Image) GetType() m.TypeString { return m.TypeImage }
 
 // Fluent setters return a copy of Image with the specified field set.

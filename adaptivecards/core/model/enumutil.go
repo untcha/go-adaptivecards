@@ -24,12 +24,6 @@ func EnumAllowedStrings[T ~string](values []T) []string {
 // enumIsValid reports whether v is in allowed.
 func enumIsValid[T stringEnum](v T, allowed []T) bool {
 	return slices.Contains(allowed, v)
-	// for _, a := range allowed {
-	// 	if v == a {
-	// 		return true
-	// 	}
-	// }
-	// return false
 }
 
 // enumAllowedStrings returns a []string copy for messages.
@@ -64,6 +58,8 @@ func enumUnmarshalJSON[T stringEnum](dst *T, b []byte, allowed []T, field string
 	return nil
 }
 
+// enumParseCanonical resolves s to a canonical allowed value, matching
+// case-insensitively, and reports whether a match was found.
 func enumParseCanonical[T stringEnum](s string, allowed []T) (T, bool) {
 	v := T(s)
 	if enumIsValid(v, allowed) {

@@ -8,8 +8,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Action.ToggleVisibility
-// An action that toggles the visibility of associated card elements.
+// ActionToggleVisibility represents an Action.ToggleVisibility that toggles the visibility of associated card elements.
 // See: https://adaptivecards.io/explorer/Action.ToggleVisibility.html
 type ActionToggleVisibility struct {
 	ActionBase
@@ -17,6 +16,7 @@ type ActionToggleVisibility struct {
 	TargetElements []TargetElement `json:"targetElements,omitempty"` // Version 1.2
 }
 
+// NewActionToggleVisibility creates an Action.ToggleVisibility with the given title and target elements.
 func NewActionToggleVisibility(title string, targets ...TargetElement) ActionToggleVisibility {
 	return ActionToggleVisibility{
 		ActionBase:     ActionBase{Title: title},
@@ -25,8 +25,10 @@ func NewActionToggleVisibility(title string, targets ...TargetElement) ActionTog
 	}
 }
 
+// GetType returns the action type string for Action.ToggleVisibility.
 func (a ActionToggleVisibility) GetType() m.TypeString { return m.TypeActionToggleVisibility }
 
+// Validate checks that at least one target element is present and that each has a valid elementId and type.
 func (a ActionToggleVisibility) Validate() error {
 	if len(a.TargetElements) == 0 {
 		return fmt.Errorf("action.toggleVisibility.targetElements is required")
@@ -47,6 +49,7 @@ func (a ActionToggleVisibility) Validate() error {
 	return nil
 }
 
+// MarshalJSON encodes the action, ensuring the Type field is always set.
 func (a ActionToggleVisibility) MarshalJSON() ([]byte, error) {
 	aa := a
 	if aa.Type == "" {
@@ -56,6 +59,7 @@ func (a ActionToggleVisibility) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(aa))
 }
 
+// UnmarshalJSON decodes the action, verifying the type and validating the result.
 func (a *ActionToggleVisibility) UnmarshalJSON(b []byte) error {
 	type alias ActionToggleVisibility
 	var tmp alias

@@ -2,7 +2,7 @@ package element
 
 import m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 
-// Common interface for all card elements
+// Element is the common interface implemented by all Adaptive Card elements.
 type Element interface {
 	GetType() m.TypeString
 }

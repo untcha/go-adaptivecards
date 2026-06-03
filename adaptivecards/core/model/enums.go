@@ -1,6 +1,6 @@
 package model
 
-// Describes how the image should fill the area.
+// ImageFillMode describes how the image should fill the area.
 type ImageFillMode string
 
 const (
@@ -56,7 +56,7 @@ func (m ImageFillMode) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(m, imageFillModeAllowed, "ImageFillMode")
 }
 
-// Describes how the image should be aligned if it must be cropped or if using repeat fill mode.
+// HorizontalAlignment describes how the image should be aligned if it must be cropped or if using repeat fill mode.
 type HorizontalAlignment string
 
 const (
@@ -77,7 +77,7 @@ func (h HorizontalAlignment) IsValid() bool {
 	return enumIsValid(h, horizontalAlignmentAllowed)
 }
 
-// allowedImageHorizontalAlignmentStrings returns the list of allowed HorizontalAlignment values as strings.
+// allowedHorizontalAlignmentStrings returns the list of allowed HorizontalAlignment values as strings.
 func allowedHorizontalAlignmentStrings() []string {
 	return enumAllowedStrings(horizontalAlignmentAllowed)
 }
@@ -97,7 +97,7 @@ func (h HorizontalAlignment) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(h, horizontalAlignmentAllowed, "HorizontalAlignment")
 }
 
-// Describes how the image should be aligned if it must be cropped or if using repeat fill mode.
+// VerticalAlignment describes how the image should be aligned if it must be cropped or if using repeat fill mode.
 type VerticalAlignment string
 
 const (
@@ -138,7 +138,7 @@ func (v VerticalAlignment) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(v, verticalAlignmentAllowed, "VerticalAlignment")
 }
 
-// Defines how the content should be aligned vertically within the container.
+// VerticalContentAlignment defines how the content should be aligned vertically within the container.
 // Only relevant for fixed-height cards, or cards with a minHeight specified.
 type VerticalContentAlignment string
 
@@ -180,7 +180,7 @@ func (v VerticalContentAlignment) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(v, verticalContentAlignmentAllowed, "VerticalContentAlignment")
 }
 
-// Controls the color of TextBlock elements.
+// TextColor controls the color of TextBlock elements.
 type TextColor string
 
 const (
@@ -229,7 +229,7 @@ func (c TextColor) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(c, textColorAllowed, "TextColor")
 }
 
-// Type of font to use for rendering
+// FontType is the type of font to use for rendering.
 type FontType string
 
 const (
@@ -268,7 +268,7 @@ func (f FontType) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(f, fontTypeAllowed, "FontType")
 }
 
-// Controls size of text.
+// FontSize controls the size of text.
 type FontSize string
 
 const (
@@ -313,7 +313,7 @@ func (s FontSize) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, fontSizeAllowed, "FontSize")
 }
 
-// Controls the weight of TextBlock elements.
+// FontWeight controls the weight of TextBlock elements.
 type FontWeight string
 
 const (
@@ -354,7 +354,7 @@ func (w FontWeight) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(w, fontWeightAllowed, "FontWeight")
 }
 
-// The style of this TextBlock for accessibility purposes.
+// TextBlockStyle is the style of a TextBlock for accessibility purposes.
 type TextBlockStyle string
 
 const (
@@ -393,7 +393,7 @@ func (s TextBlockStyle) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, textBlockStyleAllowed, "TextBlockStyle")
 }
 
-// Specifies the height of the element.
+// BlockElementHeight specifies the height of the element.
 type BlockElementHeight string
 
 const (
@@ -432,7 +432,7 @@ func (h BlockElementHeight) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(h, blockElementHeightAllowed, "BlockElementHeight")
 }
 
-// Controls the amount of spacing between this element and the preceding element.
+// Spacing controls the amount of spacing between this element and the preceding element.
 type Spacing string
 
 const (
@@ -481,7 +481,7 @@ func (s Spacing) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, spacingAllowed, "Spacing")
 }
 
-// Controls the approximate size of the image. The physical dimensions will vary per host.
+// ImageSize controls the approximate size of the image. The physical dimensions will vary per host.
 type ImageSize string
 
 const (
@@ -526,7 +526,7 @@ func (s ImageSize) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, imageSizeAllowed, "ImageSize")
 }
 
-// Controls how this Image is displayed.
+// ImageStyle controls how an Image is displayed.
 type ImageStyle string
 
 const (
@@ -565,7 +565,7 @@ func (s ImageStyle) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, imageStyleAllowed, "ImageStyle")
 }
 
-// Controls the style of an Action, which influences how the action is displayed, spoken, etc.
+// ActionStyle controls the style of an Action, which influences how the action is displayed, spoken, etc.
 type ActionStyle string
 
 const (
@@ -601,7 +601,7 @@ func (s ActionStyle) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, actionStyleAllowed, "ActionStyle")
 }
 
-// Determines whether the action should be displayed as a button or in the overflow menu.
+// ActionMode determines whether the action should be displayed as a button or in the overflow menu.
 type ActionMode string
 
 const (
@@ -635,7 +635,7 @@ func (s ActionMode) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, actionModeAllowed, "ActionMode")
 }
 
-// Defines the style of the grid. This property currently only controls the grid's color.
+// ContainerStyle defines the style of the grid. This property currently only controls the grid's color.
 type ContainerStyle string
 
 const (
@@ -682,19 +682,46 @@ func (s ContainerStyle) MarshalJSON() ([]byte, error) {
 	return enumMarshalJSON(s, containerStyleAllowed, "ContainerStyle")
 }
 
-func AllowedImageFillModeStrings() []string       { return allowedImageFillModeStrings() }
+// AllowedImageFillModeStrings returns the list of valid ImageFillMode values as strings.
+func AllowedImageFillModeStrings() []string { return allowedImageFillModeStrings() }
+
+// AllowedHorizontalAlignmentStrings returns the list of valid HorizontalAlignment values as strings.
 func AllowedHorizontalAlignmentStrings() []string { return allowedHorizontalAlignmentStrings() }
-func AllowedVerticalAlignmentStrings() []string   { return allowedVerticalAlignmentStrings() }
+
+// AllowedVerticalAlignmentStrings returns the list of valid VerticalAlignment values as strings.
+func AllowedVerticalAlignmentStrings() []string { return allowedVerticalAlignmentStrings() }
+
+// AllowedVerticalContentAlignmentStrings returns the list of valid VerticalContentAlignment values as strings.
 func AllowedVerticalContentAlignmentStrings() []string {
 	return allowedVerticalContentAlignmentStrings()
 }
-func AllowedTextColorStrings() []string          { return allowedTextColorStrings() }
-func AllowedFontTypeStrings() []string           { return allowedFontTypeStrings() }
-func AllowedFontSizeStrings() []string           { return allowedFontSizeStrings() }
-func AllowedFontWeightStrings() []string         { return allowedFontWeightStrings() }
-func AllowedSpacingStrings() []string            { return allowedSpacingStrings() }
+
+// AllowedTextColorStrings returns the list of valid TextColor values as strings.
+func AllowedTextColorStrings() []string { return allowedTextColorStrings() }
+
+// AllowedFontTypeStrings returns the list of valid FontType values as strings.
+func AllowedFontTypeStrings() []string { return allowedFontTypeStrings() }
+
+// AllowedFontSizeStrings returns the list of valid FontSize values as strings.
+func AllowedFontSizeStrings() []string { return allowedFontSizeStrings() }
+
+// AllowedFontWeightStrings returns the list of valid FontWeight values as strings.
+func AllowedFontWeightStrings() []string { return allowedFontWeightStrings() }
+
+// AllowedSpacingStrings returns the list of valid Spacing values as strings.
+func AllowedSpacingStrings() []string { return allowedSpacingStrings() }
+
+// AllowedBlockElementHeightStrings returns the list of valid BlockElementHeight values as strings.
 func AllowedBlockElementHeightStrings() []string { return allowedBlockElementHeightStrings() }
-func AllowedImageSizeStrings() []string          { return allowedImageSizeStrings() }
-func AllowedImageStyleStrings() []string         { return allowedImageStyleStrings() }
-func AllowedContainerStyleStrings() []string     { return allowedContainerStyleStrings() }
-func AllowedTextBlockStyleStrings() []string     { return allowedTextBlockStyleStrings() }
+
+// AllowedImageSizeStrings returns the list of valid ImageSize values as strings.
+func AllowedImageSizeStrings() []string { return allowedImageSizeStrings() }
+
+// AllowedImageStyleStrings returns the list of valid ImageStyle values as strings.
+func AllowedImageStyleStrings() []string { return allowedImageStyleStrings() }
+
+// AllowedContainerStyleStrings returns the list of valid ContainerStyle values as strings.
+func AllowedContainerStyleStrings() []string { return allowedContainerStyleStrings() }
+
+// AllowedTextBlockStyleStrings returns the list of valid TextBlockStyle values as strings.
+func AllowedTextBlockStyleStrings() []string { return allowedTextBlockStyleStrings() }

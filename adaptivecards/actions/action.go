@@ -2,7 +2,7 @@ package actions
 
 import m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 
-// Common interface for all card actions
+// Action is the common interface implemented by all Adaptive Card actions.
 type Action interface {
 	GetType() m.TypeString
 }

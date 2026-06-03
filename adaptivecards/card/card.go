@@ -10,17 +10,29 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
+// Version is a card schema version string (e.g. "1.5").
 type Version string
+
+// Uri is a URI string as serialized in card JSON.
 type Uri string
 
 // TODO: Forward declarations for complex types not yet implemented
+
+// Refresh is a placeholder for the AdaptiveCard refresh property (not yet implemented).
 type Refresh any
+
+// Authentication is a placeholder for the AdaptiveCard authentication property (not yet implemented).
 type Authentication any
+
+// Metadata is a placeholder for the AdaptiveCard metadata property (not yet implemented).
 type Metadata any
 
+// Schema constants describing the Adaptive Cards version this library targets.
 const (
+	// Version15 is the Adaptive Cards schema version targeted by this library.
 	Version15 Version = "1.5"
-	Schema15  Uri     = "http://adaptivecards.io/schemas/adaptive-card.json"
+	// Schema15 is the $schema URI emitted on generated cards.
+	Schema15 Uri = "http://adaptivecards.io/schemas/adaptive-card.json"
 )
 
 // Card represents the root AdaptiveCard object.
@@ -46,7 +58,7 @@ type Card struct {
 	buildErr                 error                      `json:"-"`                                  // internal only
 }
 
-// Constructor for Card with default values
+// NewCard constructs a Card with default values.
 // - Type is "AdaptiveCard"
 // - Version is "1.5"
 // - Body and Actions are initialized as empty slices
@@ -78,7 +90,8 @@ func (c *Card) Build() (*Card, error) {
 	return c, c.buildErr
 }
 
-// Custom JSON marshalling to ensure correct serialization of embedded interfaces.
+// MarshalJSON serializes the Card, applying default Type, Version, and Schema
+// values and using an alias type to avoid infinite recursion.
 func (c *Card) MarshalJSON() ([]byte, error) {
 	if c == nil {
 		return []byte("null"), nil
@@ -107,6 +120,9 @@ func (c *Card) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// UnmarshalJSON decodes a Card from JSON, resolving the interface-typed fields
+// (body, actions, selectAction) through their respective factories before
+// decoding the remaining fields.
 func (c *Card) UnmarshalJSON(b []byte) error {
 	// Decode into a generic map to handle interface fields explicitly.
 	var obj map[string]json.RawMessage

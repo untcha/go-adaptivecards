@@ -10,8 +10,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// ActionSet
-// Displays a set of actions.
+// ActionSet displays a set of actions.
 // See: https://adaptivecards.io/explorer/ActionSet.html
 type ActionSet struct {
 	e.ElementBase              // Embedding e.ElementBase to include common element fields
@@ -19,6 +18,7 @@ type ActionSet struct {
 	Actions       []a.Action   `json:"actions,omitempty"` // Version 1.2
 }
 
+// NewActionSet returns an ActionSet holding the given actions.
 func NewActionSet(actions ...a.Action) ActionSet {
 	return ActionSet{
 		Type:    m.TypeActionSet,
@@ -26,8 +26,10 @@ func NewActionSet(actions ...a.Action) ActionSet {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for ActionSet.
 func (as ActionSet) GetType() m.TypeString { return m.TypeActionSet }
 
+// Validate reports whether the ActionSet and its actions are well-formed.
 func (as ActionSet) Validate() error {
 	if err := as.validateElementBase(); err != nil {
 		return err
@@ -38,6 +40,7 @@ func (as ActionSet) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (as ActionSet) MarshalJSON() ([]byte, error) {
 	aa := as
 	if aa.Type == "" {
@@ -47,6 +50,7 @@ func (as ActionSet) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(aa))
 }
 
+// UnmarshalJSON implements json.Unmarshaler, decoding interface-typed fields via the element/action factories.
 func (as *ActionSet) UnmarshalJSON(b []byte) error {
 	var obj map[string]json.RawMessage
 	if err := json.Unmarshal(b, &obj); err != nil {

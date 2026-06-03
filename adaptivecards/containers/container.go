@@ -10,8 +10,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Container
-// Containers group items together.
+// Container groups items together.
 // See: https://adaptivecards.io/explorer/Container.html
 type Container struct {
 	e.ElementBase                                       // Embedding e.ElementBase to include common element fields
@@ -26,6 +25,7 @@ type Container struct {
 	Rtl                      *bool                      `json:"rtl,omitempty"`                      // Version 1.5
 }
 
+// NewContainer returns a Container holding the given items.
 func NewContainer(items ...e.Element) Container {
 	return Container{
 		Type:  m.TypeContainer,
@@ -33,8 +33,10 @@ func NewContainer(items ...e.Element) Container {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Container.
 func (c Container) GetType() m.TypeString { return m.TypeContainer }
 
+// Validate reports whether the Container and its children are well-formed.
 func (c Container) Validate() error {
 	if err := c.validateElementBase(); err != nil {
 		return err
@@ -77,6 +79,7 @@ func (c Container) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (c Container) MarshalJSON() ([]byte, error) {
 	cc := c
 	if cc.Type == "" {
@@ -86,6 +89,7 @@ func (c Container) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(cc))
 }
 
+// UnmarshalJSON implements json.Unmarshaler, decoding interface-typed fields via the element/action factories.
 func (c *Container) UnmarshalJSON(b []byte) error {
 	var obj map[string]json.RawMessage
 	if err := json.Unmarshal(b, &obj); err != nil {

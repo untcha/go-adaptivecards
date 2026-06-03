@@ -9,8 +9,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// TableColumnDefinition
-// Defines the characteristics of a column in a Table element.
+// TableColumnDefinition defines the characteristics of a column in a Table element.
 type TableColumnDefinition struct {
 	Type                           m.TypeString          `json:"type"`                                     // Version 1.5
 	Width                          any                   `json:"width,omitempty"`                          // Version 1.5 - string or number

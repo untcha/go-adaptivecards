@@ -10,8 +10,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Input.Text
-// Lets a user enter text.
+// InputText represents an Input.Text element that lets a user enter text.
 // See: https://adaptivecards.io/explorer/Input.Text.html
 type InputText struct {
 	InputBase
@@ -35,6 +34,7 @@ func NewInputText(id string) InputText {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Input.Text.
 func (i InputText) GetType() m.TypeString { return m.TypeInputText }
 
 // Validate checks that the InputText has valid fields.
@@ -58,6 +58,7 @@ func (i InputText) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (i InputText) MarshalJSON() ([]byte, error) {
 	ii := i
 	if ii.Type == "" {
@@ -67,6 +68,7 @@ func (i InputText) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ii))
 }
 
+// UnmarshalJSON implements json.Unmarshaler and validates the decoded value.
 func (i *InputText) UnmarshalJSON(b []byte) error {
 	var obj map[string]json.RawMessage
 	if err := json.Unmarshal(b, &obj); err != nil {

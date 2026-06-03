@@ -5,8 +5,7 @@ import (
 	"fmt"
 )
 
-// BackgroundImage
-// Specifies a background image. Acceptable formats are PNG, JPEG, and GIF
+// BackgroundImage specifies a background image. Acceptable formats are PNG, JPEG, and GIF.
 // See: https://adaptivecards.io/explorer/BackgroundImage.html
 type BackgroundImage struct {
 	URL                 string              `json:"url"`                           // Version 1.2

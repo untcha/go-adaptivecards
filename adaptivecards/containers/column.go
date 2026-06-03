@@ -10,8 +10,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Column
-// Defines a container that is part of a ColumnSet.
+// Column defines a container that is part of a ColumnSet.
 // See: https://adaptivecards.io/explorer/Column.html
 type Column struct {
 	e.ElementBase                                       // Embedding e.ElementBase to include common element fields
@@ -27,6 +26,7 @@ type Column struct {
 	Width                    any                        `json:"width,omitempty"`                    // Version 1.0
 }
 
+// NewColumn returns a Column holding the given items.
 func NewColumn(items ...e.Element) Column {
 	return Column{
 		Type:  m.TypeColumn,
@@ -34,8 +34,10 @@ func NewColumn(items ...e.Element) Column {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Column.
 func (c Column) GetType() m.TypeString { return m.TypeColumn }
 
+// Validate reports whether the Column and its children are well-formed.
 func (c Column) Validate() error {
 	if err := c.validateElementBase(); err != nil {
 		return err
@@ -93,6 +95,7 @@ func (c Column) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (c Column) MarshalJSON() ([]byte, error) {
 	cc := c
 	if cc.Type == "" {
@@ -102,6 +105,7 @@ func (c Column) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(cc))
 }
 
+// UnmarshalJSON implements json.Unmarshaler, decoding interface-typed fields via the element/action factories.
 func (c *Column) UnmarshalJSON(b []byte) error {
 	var obj map[string]json.RawMessage
 	if err := json.Unmarshal(b, &obj); err != nil {

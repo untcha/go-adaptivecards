@@ -8,8 +8,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Action.Submit
-// Gathers input fields, merges with optional data field, and sends an event to the client.
+// ActionSubmit represents an Action.Submit: it gathers input fields, merges with optional data field, and sends an event to the client.
 // It is up to the client to determine how this data is processed.
 // For example: With BotFramework bots, the client would send an activity through the messaging medium to the bot.
 // The inputs that are gathered are those on the current card, and in the case of a show card those on any parent cards.
@@ -31,8 +30,10 @@ func NewActionSubmit(title string, data any) ActionSubmit {
 	}
 }
 
+// GetType returns the action type string for Action.Submit.
 func (a ActionSubmit) GetType() m.TypeString { return m.TypeActionSubmit }
 
+// Validate checks that AssociatedInputs, if set, is "auto" or "none".
 func (a ActionSubmit) Validate() error {
 	if a.AssociatedInputs != "" {
 		if !strings.EqualFold(a.AssociatedInputs, "auto") &&
@@ -46,6 +47,7 @@ func (a ActionSubmit) Validate() error {
 	return nil
 }
 
+// MarshalJSON encodes the action, ensuring the Type field is always set.
 func (a ActionSubmit) MarshalJSON() ([]byte, error) {
 	aa := a
 	if aa.Type == "" {
@@ -55,6 +57,7 @@ func (a ActionSubmit) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(aa))
 }
 
+// UnmarshalJSON decodes the action, verifying the type and validating the result.
 func (a *ActionSubmit) UnmarshalJSON(b []byte) error {
 	type alias ActionSubmit
 	var tmp alias

@@ -8,8 +8,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// TextRun
-// Defines a single run of formatted text.
+// TextRun defines a single run of formatted text.
 // A TextRun with no properties set can be represented in the json as string
 // containing the text as a shorthand for the json object. These two representations are equivalent.
 // See: https://adaptivecards.io/explorer/TextRun.html
@@ -28,6 +27,7 @@ type TextRun struct {
 	Weight        m.FontWeight `json:"weight,omitempty"`        // Version 1.2
 }
 
+// NewTextRun creates a TextRun with the specified text.
 func NewTextRun(text string) TextRun {
 	return TextRun{
 		Type: m.TypeTextRun,
@@ -35,8 +35,10 @@ func NewTextRun(text string) TextRun {
 	}
 }
 
+// GetType returns the element type of the TextRun.
 func (r TextRun) GetType() m.TypeString { return m.TypeTextRun }
 
+// Validate checks that the TextRun has valid fields.
 func (r TextRun) Validate() error {
 	if r.Text == "" {
 		return fmt.Errorf("textRun.text is required")
@@ -61,6 +63,7 @@ func (r TextRun) Validate() error {
 	return nil
 }
 
+// MarshalJSON encodes the TextRun, emitting a plain string when only Text is set.
 func (r TextRun) MarshalJSON() ([]byte, error) {
 	rr := r
 	if rr.onlyText() {
@@ -73,6 +76,7 @@ func (r TextRun) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(rr))
 }
 
+// UnmarshalJSON decodes a TextRun from either a JSON string shorthand or a JSON object.
 func (r *TextRun) UnmarshalJSON(b []byte) error {
 	var textOnly string
 	if err := json.Unmarshal(b, &textOnly); err == nil {

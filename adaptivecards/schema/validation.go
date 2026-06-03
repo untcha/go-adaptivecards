@@ -11,6 +11,7 @@ import (
 	"github.com/untcha/go-adaptivecards/internal/schema"
 )
 
+// Package-level state caching the lazily compiled schema and any compile error.
 var (
 	compileOnce sync.Once
 	compiled    *jsonschema.Schema
@@ -48,6 +49,9 @@ func ensureCompiled() error {
 	return compileErr
 }
 
+// Validate checks that v, when marshaled to JSON, conforms to the embedded
+// Adaptive Cards 1.5 JSON Schema. It returns a descriptive error on the first
+// schema violation. The schema is compiled lazily on first use.
 func Validate(v any) error {
 	if v == nil {
 		return errors.New("value is nil")

@@ -9,8 +9,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// TextBlock
-// Displays text, allowing control over font sizes, weight, and color.
+// TextBlock displays text, allowing control over font sizes, weight, and color.
 // See: https://adaptivecards.io/explorer/TextBlock.html
 type TextBlock struct {
 	e.ElementBase                             // Embedding e.ElementBase to include common element fields
@@ -44,6 +43,7 @@ func NewTextBlock(text string) TextBlock {
 	}
 }
 
+// GetType returns the element type of the TextBlock.
 func (t TextBlock) GetType() m.TypeString { return m.TypeTextBlock }
 
 // Fluent setters return a copy of TextBlock with the specified field set.

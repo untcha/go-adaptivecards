@@ -8,8 +8,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Input.ChoiceSet
-// Allows a user to input a Choice.
+// InputChoiceSet represents an Input.ChoiceSet element that allows a user to input a Choice.
 // See: https://adaptivecards.io/explorer/Input.ChoiceSet.html
 type InputChoiceSet struct {
 	InputBase
@@ -31,6 +30,7 @@ func NewInputChoiceSet(id string, choices ...InputChoice) InputChoiceSet {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Input.ChoiceSet.
 func (i InputChoiceSet) GetType() m.TypeString { return m.TypeInputChoiceSet }
 
 // Validate checks that the InputChoiceSet has valid fields.
@@ -53,6 +53,7 @@ func (i InputChoiceSet) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (i InputChoiceSet) MarshalJSON() ([]byte, error) {
 	ii := i
 	if ii.Type == "" {
@@ -62,6 +63,7 @@ func (i InputChoiceSet) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ii))
 }
 
+// UnmarshalJSON implements json.Unmarshaler and validates the decoded value.
 func (i *InputChoiceSet) UnmarshalJSON(b []byte) error {
 	type alias InputChoiceSet
 	var tmp alias

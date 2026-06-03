@@ -31,14 +31,16 @@ type EnumError struct {
 	Allowed []string // printable list of allowed values
 }
 
+// Error implements the error interface, formatting the invalid value and allowed values.
 func (e *EnumError) Error() string {
 	return "invalid " + e.Field + " " + strconv.Quote(e.Got) +
 		" (allowed: " + strings.Join(e.Allowed, ", ") + ")"
 }
 
+// Unwrap returns ErrInvalidEnum so errors.Is reports enum validation failures.
 func (e *EnumError) Unwrap() error { return ErrInvalidEnum }
 
-// helper constructor to avoid repeating format logic
+// newEnumError is a helper constructor that avoids repeating format logic.
 func newEnumError(field, got string, allowed []string) error {
 	return &EnumError{Field: field, Got: got, Allowed: allowed}
 }

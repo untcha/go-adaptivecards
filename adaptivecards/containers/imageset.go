@@ -10,8 +10,7 @@ import (
 	els "github.com/untcha/go-adaptivecards/adaptivecards/elements"
 )
 
-// ImageSet
-// The ImageSet displays a collection of Images similar to a gallery. Acceptable formats are PNG, JPEG, and GIF
+// ImageSet displays a collection of Images similar to a gallery. Acceptable formats are PNG, JPEG, and GIF.
 // See: https://adaptivecards.io/explorer/ImageSet.html
 type ImageSet struct {
 	e.ElementBase              // Embedding e.ElementBase to include common element fields
@@ -20,6 +19,7 @@ type ImageSet struct {
 	ImageSize     m.ImageSize  `json:"imageSize,omitempty"` // Version 1.0
 }
 
+// NewImageSet returns an ImageSet holding the given images.
 func NewImageSet(images ...els.Image) ImageSet {
 	return ImageSet{
 		ElementBase: e.ElementBase{},
@@ -28,8 +28,10 @@ func NewImageSet(images ...els.Image) ImageSet {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for ImageSet.
 func (i ImageSet) GetType() m.TypeString { return m.TypeImageSet }
 
+// Validate reports whether the ImageSet and its images are well-formed.
 func (i ImageSet) Validate() error {
 	if err := i.validateElementBase(); err != nil {
 		return err
@@ -52,6 +54,7 @@ func (i ImageSet) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set and the image size is normalized.
 func (i ImageSet) MarshalJSON() ([]byte, error) {
 	ii := i
 	if ii.Type == "" {
@@ -62,6 +65,7 @@ func (i ImageSet) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ii))
 }
 
+// UnmarshalJSON implements json.Unmarshaler, normalizing the image size and validating the decoded value.
 func (i *ImageSet) UnmarshalJSON(b []byte) error {
 	type alias ImageSet
 	var tmp alias

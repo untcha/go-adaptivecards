@@ -9,8 +9,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// FactSet
-// The FactSet element displays a series of facts (i.e. name/value pairs) in a tabular form.
+// FactSet displays a series of facts (i.e. name/value pairs) in a tabular form.
 // See: https://adaptivecards.io/explorer/FactSet.html
 type FactSet struct {
 	e.ElementBase              // Embedding e.ElementBase to include common element fields
@@ -18,6 +17,7 @@ type FactSet struct {
 	Facts         []Fact       `json:"facts,omitempty"` // Version 1.0
 }
 
+// NewFactSet returns a FactSet holding the given facts.
 func NewFactSet(facts ...Fact) FactSet {
 	return FactSet{
 		Type:  m.TypeFactSet,
@@ -25,8 +25,10 @@ func NewFactSet(facts ...Fact) FactSet {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for FactSet.
 func (f FactSet) GetType() m.TypeString { return m.TypeFactSet }
 
+// Validate reports whether the FactSet and its facts are well-formed.
 func (f FactSet) Validate() error {
 	if err := f.validateElementBase(); err != nil {
 		return err
@@ -42,6 +44,7 @@ func (f FactSet) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (f FactSet) MarshalJSON() ([]byte, error) {
 	ff := f
 	if ff.Type == "" {
@@ -51,6 +54,7 @@ func (f FactSet) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ff))
 }
 
+// UnmarshalJSON implements json.Unmarshaler, decoding interface-typed fields via the element/action factories.
 func (f *FactSet) UnmarshalJSON(b []byte) error {
 	type alias FactSet
 	var tmp alias

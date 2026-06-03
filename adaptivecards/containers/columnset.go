@@ -10,7 +10,6 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// ColumnSet
 // ColumnSet divides a region into Columns, allowing elements to sit side-by-side.
 // See: https://adaptivecards.io/explorer/ColumnSet.html
 type ColumnSet struct {
@@ -24,6 +23,7 @@ type ColumnSet struct {
 	HorizontalAlignment m.HorizontalAlignment `json:"horizontalAlignment,omitempty"` // Version 1.0
 }
 
+// NewColumnSet returns a ColumnSet holding the given columns.
 func NewColumnSet(columns ...Column) ColumnSet {
 	return ColumnSet{
 		Type:    m.TypeColumnSet,
@@ -31,8 +31,10 @@ func NewColumnSet(columns ...Column) ColumnSet {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for ColumnSet.
 func (c ColumnSet) GetType() m.TypeString { return m.TypeColumnSet }
 
+// Validate reports whether the ColumnSet and its children are well-formed.
 func (c ColumnSet) Validate() error {
 	if err := c.validateElementBase(); err != nil {
 		return err
@@ -66,6 +68,7 @@ func (c ColumnSet) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (c ColumnSet) MarshalJSON() ([]byte, error) {
 	cc := c
 	if cc.Type == "" {
@@ -75,6 +78,7 @@ func (c ColumnSet) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(cc))
 }
 
+// UnmarshalJSON implements json.Unmarshaler, decoding interface-typed fields via the element/action factories.
 func (c *ColumnSet) UnmarshalJSON(b []byte) error {
 	var obj map[string]json.RawMessage
 	if err := json.Unmarshal(b, &obj); err != nil {

@@ -13,6 +13,7 @@ import (
 
 // Chainable helpers (keep business logic outside of JSON structs)
 
+// Title appends a heading-styled TextBlock to the card body.
 func (c *Card) Title(title string) *Card {
 	if c == nil || c.buildErr != nil {
 		return c
@@ -22,6 +23,7 @@ func (c *Card) Title(title string) *Card {
 	return c
 }
 
+// AddElement appends an element to the card body.
 func (c *Card) AddElement(el e.Element) *Card {
 	if c == nil || c.buildErr != nil {
 		return c
@@ -61,6 +63,7 @@ func (c *Card) AddTextBlock(tb els.TextBlock) *Card {
 	return c
 }
 
+// AddAction appends an action to the card.
 func (c *Card) AddAction(act a.Action) *Card {
 	if c == nil || c.buildErr != nil {
 		return c
@@ -115,6 +118,7 @@ func (c *Card) AddTable(table t.Table) *Card {
 	return c
 }
 
+// SetSelectAction sets the card-level selectAction; Action.ShowCard is rejected.
 func (c *Card) SetSelectAction(act a.Action) *Card {
 	if c == nil {
 		return c

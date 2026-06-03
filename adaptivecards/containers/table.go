@@ -9,8 +9,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Table
-// Provides a way to display data in a tabular form.
+// Table provides a way to display data in a tabular form.
 // See: https://adaptivecards.io/explorer/Table.html
 type Table struct {
 	e.ElementBase                                          // Embedding e.ElementBase to include common element fields
@@ -54,6 +53,7 @@ func NewTableWithColumnsAndRows(columns []TableColumnDefinition, rows []TableRow
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Table.
 func (t Table) GetType() m.TypeString { return m.TypeTable }
 
 // Builder methods for Table structure
@@ -256,7 +256,7 @@ func (t Table) Validate() error {
 	return nil
 }
 
-// Custom JSON marshalling to ensure Type is always set and defaults are applied
+// MarshalJSON implements json.Marshaler, ensuring the type field is set and table defaults are applied.
 func (t Table) MarshalJSON() ([]byte, error) {
 	tt := t
 	if tt.Type == "" {
@@ -279,7 +279,7 @@ func (t Table) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(tt))
 }
 
-// Custom JSON unmarshalling
+// UnmarshalJSON implements json.Unmarshaler, applying table defaults and validating enum values.
 func (t *Table) UnmarshalJSON(b []byte) error {
 	type alias Table
 	var tmp alias

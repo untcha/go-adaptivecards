@@ -7,8 +7,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Input.Choice
-// Describes a choice for use in a ChoiceSet.
+// InputChoice represents an Input.Choice that describes a choice for use in a ChoiceSet.
 // See: https://adaptivecards.io/explorer/Input.Choice.html
 type InputChoice struct {
 	Type  m.TypeString `json:"type,omitempty"`

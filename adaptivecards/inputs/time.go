@@ -8,8 +8,7 @@ import (
 	m "github.com/untcha/go-adaptivecards/adaptivecards/core/model"
 )
 
-// Input.Time
-// Lets a user select a time.
+// InputTime represents an Input.Time element that lets a user select a time.
 // See: https://adaptivecards.io/explorer/Input.Time.html
 type InputTime struct {
 	InputBase
@@ -20,6 +19,7 @@ type InputTime struct {
 	Value       string       `json:"value,omitempty"`       // Version 1.0
 }
 
+// NewInputTime creates an Input.Time with the specified id.
 func NewInputTime(id string) InputTime {
 	return InputTime{
 		InputBase: InputBase{ElementBase: e.ElementBase{ID: id}},
@@ -27,8 +27,10 @@ func NewInputTime(id string) InputTime {
 	}
 }
 
+// GetType returns the Adaptive Card type discriminator for Input.Time.
 func (i InputTime) GetType() m.TypeString { return m.TypeInputTime }
 
+// Validate checks that the InputTime has valid fields.
 func (i InputTime) Validate() error {
 	if err := i.validateInputBase("input.time"); err != nil {
 		return err
@@ -36,6 +38,7 @@ func (i InputTime) Validate() error {
 	return nil
 }
 
+// MarshalJSON implements json.Marshaler, ensuring the type field is set.
 func (i InputTime) MarshalJSON() ([]byte, error) {
 	ii := i
 	if ii.Type == "" {
@@ -45,6 +48,7 @@ func (i InputTime) MarshalJSON() ([]byte, error) {
 	return json.Marshal(alias(ii))
 }
 
+// UnmarshalJSON implements json.Unmarshaler and validates the decoded value.
 func (i *InputTime) UnmarshalJSON(b []byte) error {
 	type alias InputTime
 	var tmp alias
