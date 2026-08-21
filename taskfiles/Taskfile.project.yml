@@ -6,15 +6,15 @@ version: "3"
 # so run these as e.g. `task project:update:schema`.
 
 vars:
-    SCHEMA_VERSION: "1.5.0"
-    SCHEMA_URL: "https://adaptivecards.io/schemas/{{.SCHEMA_VERSION}}/adaptive-card.json"
-    SCHEMA_PATH: "internal/schema/adaptive-card.json"
+  SCHEMA_VERSION: "1.5.0"
+  SCHEMA_URL: "https://adaptivecards.io/schemas/{{.SCHEMA_VERSION}}/adaptive-card.json"
+  SCHEMA_PATH: "internal/schema/adaptive-card.json"
 
 tasks:
-    update:schema:
-        desc: Download Adaptive Cards schema version {{.SCHEMA_VERSION}}
-        cmds:
-            - mkdir -p internal/schema
-            - curl -fsSL {{.SCHEMA_URL}} -o {{.SCHEMA_PATH}}
-        generates:
-            - "{{.SCHEMA_PATH}}"
+  update:schema:
+    desc: Download Adaptive Cards schema version {{.SCHEMA_VERSION}}
+    cmds:
+      - mkdir -p internal/schema
+      - curl -fsSL {{.SCHEMA_URL}} -o {{.SCHEMA_PATH}}
+    generates:
+      - "{{.SCHEMA_PATH}}"
