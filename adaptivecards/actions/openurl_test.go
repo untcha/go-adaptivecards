@@ -73,7 +73,10 @@ func TestActionOpenURLMarshalUnmarshal(t *testing.T) {
 	if err := json.Unmarshal([]byte(`{"type":"Action.OpenUrl","url":"not-a-url"}`), &decoded); err == nil {
 		t.Fatalf("expected invalid url error")
 	}
-	if err := json.Unmarshal([]byte(`{"type":"Action.OpenUrl","url":"https://example.com","iconUrl":"mailto:test@example.com"}`), &decoded); err == nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Action.OpenUrl","url":"https://example.com","iconUrl":"mailto:test@example.com"}`),
+		&decoded,
+	); err == nil {
 		t.Fatalf("expected invalid iconUrl error")
 	}
 }

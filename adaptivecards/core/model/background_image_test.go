@@ -924,10 +924,12 @@ func TestBackgroundImageEdgeCases(t *testing.T) {
 
 		// Test chaining doesn't affect original
 		chained := original.FillRepeat().AlignRight().AlignBottom()
-		if original.FillMode != ImageFillCover || original.HorizontalAlignment != HAlignCenter || original.VerticalAlignment != VAlignTop {
+		if original.FillMode != ImageFillCover || original.HorizontalAlignment != HAlignCenter ||
+			original.VerticalAlignment != VAlignTop {
 			t.Errorf("chained operations modified original object")
 		}
-		if chained.FillMode != ImageFillRepeat || chained.HorizontalAlignment != HAlignRight || chained.VerticalAlignment != VAlignBottom {
+		if chained.FillMode != ImageFillRepeat || chained.HorizontalAlignment != HAlignRight ||
+			chained.VerticalAlignment != VAlignBottom {
 			t.Errorf("chained operations didn't produce expected result")
 		}
 	})

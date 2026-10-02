@@ -18,7 +18,11 @@ func TestActionToggleVisibilityValidateAndFactory(t *testing.T) {
 		t.Fatalf("unexpected validation error: %v", err)
 	}
 
-	decoded, err := UnmarshalAction([]byte(`{"type":"Action.ToggleVisibility","title":"Toggle","targetElements":["details",{"type":"TargetElement","elementId":"extra","isVisible":true}]}`))
+	decoded, err := UnmarshalAction(
+		[]byte(
+			`{"type":"Action.ToggleVisibility","title":"Toggle","targetElements":["details",{"type":"TargetElement","elementId":"extra","isVisible":true}]}`,
+		),
+	)
 	if err != nil {
 		t.Fatalf("unexpected action unmarshal error: %v", err)
 	}

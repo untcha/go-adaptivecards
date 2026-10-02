@@ -112,7 +112,10 @@ func (tcd TableColumnDefinition) Validate() error {
 		switch w := tcd.Width.(type) {
 		case string:
 			if w != "" && !isValidWidthString(w) {
-				return fmt.Errorf("TableColumnDefinition.width as string must be \"auto\", \"stretch\", or in format \"<number>px\" (got %q)", w)
+				return fmt.Errorf(
+					"TableColumnDefinition.width as string must be \"auto\", \"stretch\", or in format \"<number>px\" (got %q)",
+					w,
+				)
 			}
 		case int:
 			if w < 1 {
@@ -213,7 +216,10 @@ func (tcd *TableColumnDefinition) UnmarshalJSON(b []byte) error {
 		switch w := tmp.Width.(type) {
 		case string:
 			if w != "" && !isValidWidthString(w) {
-				return fmt.Errorf("TableColumnDefinition.width as string must be \"auto\", \"stretch\", or in format \"<number>px\" (got %q)", w)
+				return fmt.Errorf(
+					"TableColumnDefinition.width as string must be \"auto\", \"stretch\", or in format \"<number>px\" (got %q)",
+					w,
+				)
 			}
 		case float64: // JSON numbers are unmarshaled as float64
 			if w < 1 {

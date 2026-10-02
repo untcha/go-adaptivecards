@@ -21,7 +21,10 @@ func TestInputNumberValidateAndUnmarshal(t *testing.T) {
 	}
 
 	var decoded InputNumber
-	if err := json.Unmarshal([]byte(`{"type":"Input.Number","id":"n","min":0,"max":10,"value":3}`), &decoded); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Input.Number","id":"n","min":0,"max":10,"value":3}`),
+		&decoded,
+	); err != nil {
 		t.Fatalf("unexpected unmarshal error: %v", err)
 	}
 	if decoded.Type != m.TypeInputNumber {

@@ -17,7 +17,10 @@ func TestInputTimeValidateAndUnmarshal(t *testing.T) {
 	}
 
 	var decoded InputTime
-	if err := json.Unmarshal([]byte(`{"type":"Input.Time","id":"t","min":"09:00","max":"18:00","value":"10:30"}`), &decoded); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Input.Time","id":"t","min":"09:00","max":"18:00","value":"10:30"}`),
+		&decoded,
+	); err != nil {
 		t.Fatalf("unexpected unmarshal error: %v", err)
 	}
 	if decoded.Type != m.TypeInputTime {

@@ -70,7 +70,12 @@ func validateURLWithOptions(u string, baseErr error, opts URLValidationOptions) 
 		if len(allowedSchemes) == 1 {
 			return "", fmt.Errorf("%w: unsupported scheme %q (want %s)", baseErr, parsed.Scheme, allowedSchemes[0])
 		}
-		return "", fmt.Errorf("%w: unsupported scheme %q (want %s)", baseErr, parsed.Scheme, strings.Join(allowedSchemes, "/"))
+		return "", fmt.Errorf(
+			"%w: unsupported scheme %q (want %s)",
+			baseErr,
+			parsed.Scheme,
+			strings.Join(allowedSchemes, "/"),
+		)
 	}
 
 	// Validate host (if required and not a data URI)

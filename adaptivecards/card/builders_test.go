@@ -153,7 +153,11 @@ func TestBuilderErrorPreservationAndNilReceiverBranches(t *testing.T) {
 	if c.CardBuildErr() == nil || c.CardBuildErr() != before {
 		t.Fatalf("expected existing buildErr to be preserved")
 	}
-	c.SetLang("de-DE").SetSpeak("ignored").SetFallbackText("ignored").AddImage("https://example.com/image.png").AddContainer(els.NewTextBlock("ignored"))
+	c.SetLang("de-DE").
+		SetSpeak("ignored").
+		SetFallbackText("ignored").
+		AddImage("https://example.com/image.png").
+		AddContainer(els.NewTextBlock("ignored"))
 	if c.Lang != "" {
 		t.Fatalf("expected lang unchanged when buildErr is set")
 	}
@@ -178,7 +182,9 @@ func TestBuilderErrorPreservationAndNilReceiverBranches(t *testing.T) {
 	if NewCard().SetBackgroundImageWithAlignment("bad-url", m.HAlignCenter, m.VAlignCenter).CardBuildErr() == nil {
 		t.Fatalf("expected invalid url error for SetBackgroundImageWithAlignment")
 	}
-	if NewCard().SetBackgroundImageComplete("bad-url", m.ImageFillCover, m.HAlignCenter, m.VAlignCenter).CardBuildErr() == nil {
+	if NewCard().SetBackgroundImageComplete("bad-url", m.ImageFillCover, m.HAlignCenter, m.VAlignCenter).
+		CardBuildErr() ==
+		nil {
 		t.Fatalf("expected invalid url error for SetBackgroundImageComplete")
 	}
 
@@ -211,7 +217,11 @@ func TestBuilderAddersSetTypes(t *testing.T) {
 	if err != nil {
 		t.Fatalf("setup action failed: %v", err)
 	}
-	card := NewCard().Title("title").AddTextBlock(tb).AddTable(table).AddElement(els.NewImage("https://example.com/i.png")).AddAction(act)
+	card := NewCard().Title("title").
+		AddTextBlock(tb).
+		AddTable(table).
+		AddElement(els.NewImage("https://example.com/i.png")).
+		AddAction(act)
 
 	if len(card.Body) != 4 {
 		t.Fatalf("expected 4 body elements, got %d", len(card.Body))

@@ -17,7 +17,10 @@ func TestInputDateValidateAndUnmarshal(t *testing.T) {
 	}
 
 	var decoded InputDate
-	if err := json.Unmarshal([]byte(`{"type":"Input.Date","id":"d","min":"2026-01-01","max":"2026-12-31","value":"2026-10-01"}`), &decoded); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Input.Date","id":"d","min":"2026-01-01","max":"2026-12-31","value":"2026-10-01"}`),
+		&decoded,
+	); err != nil {
 		t.Fatalf("unexpected unmarshal error: %v", err)
 	}
 	if decoded.Type != m.TypeInputDate {

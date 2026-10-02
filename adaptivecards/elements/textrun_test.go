@@ -16,7 +16,10 @@ func TestTextRunStringShorthandAndObjectUnmarshal(t *testing.T) {
 		t.Fatalf("unexpected shorthand text run: %+v", run)
 	}
 
-	if err := json.Unmarshal([]byte(`{"type":"TextRun","text":"Link","selectAction":{"type":"Action.OpenUrl","url":"https://example.com"}}`), &run); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"TextRun","text":"Link","selectAction":{"type":"Action.OpenUrl","url":"https://example.com"}}`),
+		&run,
+	); err != nil {
 		t.Fatalf("unexpected object unmarshal error: %v", err)
 	}
 	if run.SelectAction == nil {
@@ -33,7 +36,10 @@ func TestTextRunValidationErrors(t *testing.T) {
 	if err := json.Unmarshal([]byte(`{"type":"Wrong","text":"x"}`), &run); err == nil {
 		t.Fatalf("expected type mismatch error")
 	}
-	if err := json.Unmarshal([]byte(`{"type":"TextRun","text":"x","selectAction":{"type":"Action.ShowCard"}}`), &run); err == nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"TextRun","text":"x","selectAction":{"type":"Action.ShowCard"}}`),
+		&run,
+	); err == nil {
 		t.Fatalf("expected selectAction validation error")
 	}
 }

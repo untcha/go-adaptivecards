@@ -123,14 +123,22 @@ func TestImageValidateAcceptsHeightTokensAndPixels(t *testing.T) {
 
 func TestImageUnmarshalSelectActionAndErrors(t *testing.T) {
 	var img Image
-	if err := json.Unmarshal([]byte(`{"type":"Image","url":"https://example.com/i.png","selectAction":{"type":"Action.OpenUrl","url":"https://example.com"}}`), &img); err != nil {
+	if err := json.Unmarshal(
+		[]byte(
+			`{"type":"Image","url":"https://example.com/i.png","selectAction":{"type":"Action.OpenUrl","url":"https://example.com"}}`,
+		),
+		&img,
+	); err != nil {
 		t.Fatalf("unexpected image selectAction unmarshal error: %v", err)
 	}
 	if img.SelectAction == nil {
 		t.Fatalf("expected selectAction set")
 	}
 
-	if err := json.Unmarshal([]byte(`{"type":"Image","url":"https://example.com/i.png","selectAction":{"type":"Nope"}}`), &img); err == nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Image","url":"https://example.com/i.png","selectAction":{"type":"Nope"}}`),
+		&img,
+	); err == nil {
 		t.Fatalf("expected image selectAction error")
 	}
 

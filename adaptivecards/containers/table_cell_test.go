@@ -48,7 +48,10 @@ func TestTableCellConvenienceMethodsAndUnmarshalErrors(t *testing.T) {
 	if err := json.Unmarshal([]byte(`{"type":"Wrong","items":[]}`), &tc); err == nil {
 		t.Fatalf("expected type error")
 	}
-	if err := json.Unmarshal([]byte(`{"type":"TableCell","selectAction":{"type":"Nope"},"items":[{"type":"TextBlock","text":"x"}]}`), &tc); err == nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"TableCell","selectAction":{"type":"Nope"},"items":[{"type":"TextBlock","text":"x"}]}`),
+		&tc,
+	); err == nil {
 		t.Fatalf("expected selectAction error")
 	}
 }

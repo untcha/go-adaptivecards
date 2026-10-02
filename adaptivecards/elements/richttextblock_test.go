@@ -18,7 +18,10 @@ func TestRichTextBlockValidateAndUnmarshal(t *testing.T) {
 	}
 
 	var decoded RichTextBlock
-	if err := json.Unmarshal([]byte(`{"type":"RichTextBlock","inlines":["A",{"type":"TextRun","text":"B"}]}`), &decoded); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"RichTextBlock","inlines":["A",{"type":"TextRun","text":"B"}]}`),
+		&decoded,
+	); err != nil {
 		t.Fatalf("unexpected richtext unmarshal error: %v", err)
 	}
 	if decoded.Type != m.TypeRichTextBlock {

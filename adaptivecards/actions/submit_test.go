@@ -18,7 +18,9 @@ func TestActionSubmitFactoryAndValidation(t *testing.T) {
 		t.Fatalf("expected associatedInputs error")
 	}
 
-	act, err := UnmarshalAction([]byte(`{"type":"Action.Submit","title":"Send","data":{"x":1},"associatedInputs":"none"}`))
+	act, err := UnmarshalAction(
+		[]byte(`{"type":"Action.Submit","title":"Send","data":{"x":1},"associatedInputs":"none"}`),
+	)
 	if err != nil {
 		t.Fatalf("unexpected unmarshal action error: %v", err)
 	}

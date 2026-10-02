@@ -17,14 +17,20 @@ func TestInputChoiceSetValidateAndUnmarshal(t *testing.T) {
 	}
 
 	var decoded InputChoiceSet
-	if err := json.Unmarshal([]byte(`{"type":"Input.ChoiceSet","id":"x","choices":[{"title":"A","value":"a"}],"style":"expanded"}`), &decoded); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Input.ChoiceSet","id":"x","choices":[{"title":"A","value":"a"}],"style":"expanded"}`),
+		&decoded,
+	); err != nil {
 		t.Fatalf("unexpected unmarshal error: %v", err)
 	}
 	if decoded.Type != m.TypeInputChoiceSet {
 		t.Fatalf("expected input choice set type")
 	}
 	var decodedCase InputChoiceSet
-	if err := json.Unmarshal([]byte(`{"type":"Input.ChoiceSet","id":"x","choices":[{"title":"A","value":"a"}],"style":"COMPACT"}`), &decodedCase); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Input.ChoiceSet","id":"x","choices":[{"title":"A","value":"a"}],"style":"COMPACT"}`),
+		&decodedCase,
+	); err != nil {
 		t.Fatalf("unexpected case-insensitive unmarshal error: %v", err)
 	}
 	if decodedCase.Style != m.ChoiceInputStyleCompact {

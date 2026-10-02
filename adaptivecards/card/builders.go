@@ -194,7 +194,11 @@ func (c *Card) SetBackgroundImageWithFillMode(url string, fillMode m.ImageFillMo
 }
 
 // SetBackgroundImageWithAlignment sets the BackgroundImage with specified URL and alignments.
-func (c *Card) SetBackgroundImageWithAlignment(url string, horizontalAlign m.HorizontalAlignment, verticalAlign m.VerticalAlignment) *Card {
+func (c *Card) SetBackgroundImageWithAlignment(
+	url string,
+	horizontalAlign m.HorizontalAlignment,
+	verticalAlign m.VerticalAlignment,
+) *Card {
 	if c == nil {
 		return c
 	}
@@ -210,7 +214,12 @@ func (c *Card) SetBackgroundImageWithAlignment(url string, horizontalAlign m.Hor
 }
 
 // SetBackgroundImageComplete sets the BackgroundImage with all parameters.
-func (c *Card) SetBackgroundImageComplete(url string, fillMode m.ImageFillMode, horizontalAlign m.HorizontalAlignment, verticalAlign m.VerticalAlignment) *Card {
+func (c *Card) SetBackgroundImageComplete(
+	url string,
+	fillMode m.ImageFillMode,
+	horizontalAlign m.HorizontalAlignment,
+	verticalAlign m.VerticalAlignment,
+) *Card {
 	if c == nil {
 		return c
 	}
@@ -368,7 +377,11 @@ func (c *Card) SetVerticalContentAlignment(v m.VerticalContentAlignment) *Card {
 		return c
 	}
 	if v != "" && !v.IsValid() {
-		c.buildErr = m.NewEnumError("Card.verticalContentAlignment", string(v), m.AllowedVerticalContentAlignmentStrings())
+		c.buildErr = m.NewEnumError(
+			"Card.verticalContentAlignment",
+			string(v),
+			m.AllowedVerticalContentAlignmentStrings(),
+		)
 		return c
 	}
 	c.VerticalContentAlignment = v

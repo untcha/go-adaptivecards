@@ -24,7 +24,10 @@ func TestInputTextValidateAndUnmarshal(t *testing.T) {
 	}
 
 	var decoded InputText
-	if err := json.Unmarshal([]byte(`{"type":"Input.Text","id":"x","style":"text","inlineAction":{"type":"Action.Submit","title":"Go"}}`), &decoded); err != nil {
+	if err := json.Unmarshal(
+		[]byte(`{"type":"Input.Text","id":"x","style":"text","inlineAction":{"type":"Action.Submit","title":"Go"}}`),
+		&decoded,
+	); err != nil {
 		t.Fatalf("unexpected unmarshal error: %v", err)
 	}
 	if decoded.Type != m.TypeInputText {

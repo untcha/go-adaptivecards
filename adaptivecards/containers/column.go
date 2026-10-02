@@ -78,7 +78,10 @@ func (c Column) Validate() error {
 		switch w := c.Width.(type) {
 		case string:
 			if w != "" && !isValidWidthString(w) {
-				return fmt.Errorf("column.width as string must be \"auto\", \"stretch\", or in format \"<number>px\" (got %q)", w)
+				return fmt.Errorf(
+					"column.width as string must be \"auto\", \"stretch\", or in format \"<number>px\" (got %q)",
+					w,
+				)
 			}
 		case int:
 			if w < 1 {

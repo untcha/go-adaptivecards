@@ -36,7 +36,13 @@ func TestPostToWorkflowRawSuccess(t *testing.T) {
 
 	card := c.NewCard().AddTextBlock(els.NewTextBlock("hello"))
 	policy := URLPolicy{AllowHTTP: true, AllowPrivateNetworks: true}
-	if err := PostToWorkflowRawWithClientAndPolicy(context.Background(), srv.Client(), srv.URL, card, policy); err != nil {
+	if err := PostToWorkflowRawWithClientAndPolicy(
+		context.Background(),
+		srv.Client(),
+		srv.URL,
+		card,
+		policy,
+	); err != nil {
 		t.Fatalf("unexpected post error: %v", err)
 	}
 }
@@ -87,7 +93,13 @@ func TestPostToWorkflowRawWithClientSuccess(t *testing.T) {
 
 	card := c.NewCard().AddTextBlock(els.NewTextBlock("hello"))
 	policy := URLPolicy{AllowHTTP: true, AllowPrivateNetworks: true}
-	if err := PostToWorkflowRawWithClientAndPolicy(context.Background(), srv.Client(), srv.URL, card, policy); err != nil {
+	if err := PostToWorkflowRawWithClientAndPolicy(
+		context.Background(),
+		srv.Client(),
+		srv.URL,
+		card,
+		policy,
+	); err != nil {
 		t.Fatalf("unexpected post error: %v", err)
 	}
 }

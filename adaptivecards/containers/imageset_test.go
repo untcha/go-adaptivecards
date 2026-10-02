@@ -28,7 +28,12 @@ func TestImageSetValidateAndUnmarshal(t *testing.T) {
 	}
 
 	var decoded ImageSet
-	if err := json.Unmarshal([]byte(`{"type":"ImageSet","images":[{"type":"Image","url":"https://example.com/a.png"}],"imageSize":"stretch"}`), &decoded); err != nil {
+	if err := json.Unmarshal(
+		[]byte(
+			`{"type":"ImageSet","images":[{"type":"Image","url":"https://example.com/a.png"}],"imageSize":"stretch"}`,
+		),
+		&decoded,
+	); err != nil {
 		t.Fatalf("unexpected imageset unmarshal error: %v", err)
 	}
 	if decoded.ImageSize != m.ImageSizeMedium {
