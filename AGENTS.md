@@ -79,7 +79,14 @@ pkg/...             # only if genuinely reusable
 
 - Single source of truth for version info: `internal/appmeta`
   (`Version`, `Commit`, `BuildDate`), stamped via `-ldflags` by the Taskfile.
+  Start from the `appmeta/` template (see **Templates**).
+- When nothing is stamped (`Version == "dev"`), fall back to the module version
+  from `debug.ReadBuildInfo()`, skipping empty and `(devel)`. Builds via
+  `go install module@vX.Y.Z` skip the Taskfile; this makes them report the tag.
 - Surface `Version` in `--version` output and in the User-Agent of API clients.
+- The template carries no app name, so it stays identical across repos. A repo
+  that needs one adds it below the template code: `const Name = "<app>"` and
+  `func UserAgent() string { return Name + "/" + Version }`.
 
 ### Tooling
 
@@ -181,6 +188,8 @@ project-specific needs.
 - [LICENSE](https://github.com/untcha/meta/blob/main/LICENSE)
 - [taskfiles](https://github.com/untcha/meta/tree/main/taskfiles)
   (`common.yml` + `cli` / `library` / `lambda`)
+- [appmeta](https://github.com/untcha/meta/tree/main/appmeta)
+  (copy to `internal/appmeta/`)
 
 ---
 
@@ -195,4 +204,4 @@ For any library, framework, tooling, or version-specific question:
 
 ## Meta
 
-Version: v0.5.2 | Updated: 2026-10-02 | Author: Alex Untch
+Version: v0.6.1 | Updated: 2026-10-03 | Author: Alex Untch
