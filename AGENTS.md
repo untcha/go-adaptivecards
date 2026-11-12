@@ -77,8 +77,9 @@ pkg/...             # only if genuinely reusable
 
 ### Build Metadata
 
-- Single source of truth for version info: `internal/appmeta`
-  (`Version`, `Commit`, `BuildDate`), stamped via `-ldflags` by the Taskfile.
+- Single source of truth for build info: `internal/appmeta`
+  (`Name`, `Version`, `Commit`, `BuildDate`), stamped via `-ldflags` by the
+  Taskfile. `Name` comes from the Taskfile's `APP_NAME`.
   Start from the `appmeta/` template (see **Templates**).
 - When nothing is stamped (`Version == "dev"`), fall back to the module version
   from `debug.ReadBuildInfo()`, skipping empty and `(devel)`. Builds via
@@ -87,17 +88,24 @@ pkg/...             # only if genuinely reusable
 - `--version` (and a `version` subcommand, if any) prints one line:
   `<binary> <appmeta.String()>`, e.g. `tool v1.2.0 (commit abc1234, built …)`.
   With cobra, set `Version: appmeta.String()` and
-  `SetVersionTemplate("<binary> {{.Version}}\n")`. With fang, also pass
-  `fang.WithVersion(appmeta.String())`; otherwise fang overwrites `Version`
-  with its own build info string. Skip `fang.WithCommit`, which repeats the commit.
-- The template carries no app name, so it stays identical across repos. A repo
-  that needs one adds it below the template code: `const Name = "<app>"` and
-  `func UserAgent() string { return Name + "/" + Version }`.
+  `SetVersionTemplate("<binary> {{.Version}}\n")`.
+- When nothing is stamped (`Name == ""`), fall back to the last element of the
+  main package path, so `go install module/cmd/<app>@vX.Y.Z` reports `<app>`.
+- Never hardcode the app name in `appmeta`: the template stays identical across
+  repos and the Taskfile stays the one place the name lives. API clients send
+  `appmeta.UserAgent()` (`<name>/<version>`) as their User-Agent.
 
 ### Tooling
 
 - Use **Taskfile** for automation (see templates below). Reproducible builds:
   pin versions, no implicit installs. Avoid Makefiles and over-engineered pipelines.
+- Dead code: `task deadcode` reports functions no `main` or test reaches,
+  including exported ones that `task lint` cannot see. Judge each finding: a dead
+  method may still satisfy an interface.
+- Markdown: `task md:lint` (CI) and `task md:fmt` (fix), using **rumdl** with the
+  repo's `.rumdl.toml`. rumdl is a standalone binary that can't be pinned like a
+  `go run` tool, so the installed version is used; install it explicitly
+  (Homebrew or Cargo), never implicitly via `uvx`.
 - Keep `common.yml` at `taskfiles/common.yml`. The templates already include it
   as `./taskfiles/common.yml`, relative to the destination repo root, so copy
   them without editing the include. Keep the path repo-relative and never point
@@ -115,7 +123,9 @@ it starts from, under `taskfiles/`.
 
 ### CLI Tools → `taskfiles/cli/Taskfile.yml`
 
-- Use **Cobra** (commands), **Viper** (config), **charmbracelet/fang** (polish).
+- Use **Cobra** (commands) and **Viper** (config).
+- Run the root command with `SilenceErrors` and `SilenceUsage` set, print the
+  returned error to stderr once, and exit with the repo's exit-code mapping.
 - Keep `cmd/...` thin — delegate to `internal/` packages. Fail fast with clear,
   actionable errors.
 - Resolve config from flags, env vars, and config file (Viper). Consistent
@@ -191,6 +201,7 @@ project-specific needs.
 
 - [.gitignore](https://github.com/untcha/meta/blob/main/.gitignore)
 - [.golangci.yml](https://github.com/untcha/meta/blob/main/.golangci.yml)
+- [.rumdl.toml](https://github.com/untcha/meta/blob/main/.rumdl.toml)
 - [LICENSE](https://github.com/untcha/meta/blob/main/LICENSE)
 - [taskfiles](https://github.com/untcha/meta/tree/main/taskfiles)
   (`common.yml` + `cli` / `library` / `lambda`)
@@ -210,4 +221,4 @@ For any library, framework, tooling, or version-specific question:
 
 ## Meta
 
-Version: v0.6.2 | Updated: 2026-10-03 | Author: Alex Untch
+Version: v0.7.1 | Updated: 2026-11-12 | Author: Alex Untch
